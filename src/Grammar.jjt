@@ -1,0 +1,113 @@
+PARSER_BEGIN(Grammar)
+
+/**
+ * An Arithmetic Grammar.
+ */
+public class Grammar {
+
+  /** Main entry point. */
+  public static void main(String args[]) {
+    System.out.println("Reading from standard input...");
+    Grammar t = new Grammar(System.in);
+    try {
+      SimpleNode n = t.Start();
+      n.dump("");
+    } catch (Exception e) {
+      System.out.println(e.getMessage());
+      e.printStackTrace();
+    }
+  }
+}
+
+PARSER_END(Grammar)
+
+SKIP : {
+"\t"
+|"\r"
+}
+
+SimpleNode Start() : {}
+{
+  TEXTE() CR() REEL() CR() BOOLEEN() CR() ENTIER()
+  { return jjtThis; }
+}
+
+void CR():
+{}
+{
+    [ [ ESPACE() ] "#" TEXTE_2() ] "\n" [ CR() ]
+}
+
+void TEXTE():
+{}
+{
+    "\"" TEXTE_2() "\""
+}
+
+void TEXTE_2():
+{}
+{
+    [ (MAJUSCULE() | MINSUCULE() | CHIFFRE() | CHAR_SPEC() )  TEXTE_2() ]
+}
+
+void REEL():
+{}
+{
+    ["-"] NOMBRE() "." NOMBRE()
+}
+
+void ENTIER():
+{}
+{
+    ["-"] NOMBRE()
+}
+
+void NOMBRE():
+{}
+{
+    CHIFFRE() [ NOMBRE() ]
+}
+
+void CHAR_SPEC():
+{}
+{
+    "," | "é" | "è" | "à" | "ù" | "ç"| ";" | "." | "!" | "/" | "\\" | ":" | "?"| "%" | "^" |
+    "$" | "*" | "@" | "_" | "-" | "(" | ")" | "#" | "+" | "=" | "{" | "}" | "~" | "&" | "°" |
+    "<" | ">" | "'" | ESPACE()
+}
+
+void TYPE_VAR():
+{}
+{
+    "entier" | "reel" | "texte" | "booleen"
+}
+
+void BOOLEEN():
+{}
+{
+    "Vrai" | "Faux"
+}
+
+void CHIFFRE():
+{}
+{
+    "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+}
+
+void MAJUSCULE():
+{}
+{
+    "A" | "B" | "C" | "D" | "E" | "F" | "G" | "H" | "I" | "J" | "K" | "L" | "M" | "N" | "O" | "P" | "Q" | "R" | "S" | "T" | "U" | "V" | "W" | "X" | "Y" | "Z"
+}
+
+void MINSUCULE():
+{}
+{
+    "a" | "b" | "c" | "d" | "e" | "f" | "g" | "h" | "i" | "j" | "k" | "l" | "m" | "n" | "o" | "p" | "q" | "r" | "s" | "t" | "u" | "v" | "w" | "x" | "y" | "z"
+}
+
+void ESPACE():
+{}
+{
+    " " [ ESPACE() ]
+}
