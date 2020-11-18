@@ -28,7 +28,7 @@ SKIP : {
 
 SimpleNode Start() : {}
 {
-  OPERATEUR_EGAL() ";"
+  DECL_FONC() ";"
   { return jjtThis; }
 }
 
@@ -157,111 +157,138 @@ void DECL_VAR():
     NOM_VAR() ":" TYPE_VAR()
 }
 
-//void CONTENU_VAR():
-//{}
-//{
-// TEXTE() | EXP_ARITH() | CONDITION() | NOM_VAR()
-//}
-//
-//void PARAM_VAL():
-//{}
-//{
-//    CONTENU_VAR() [ "," PARAM_VAL() ]
-//}
-//
-//void APPEL_METH():
-//{}
-//{
-//    NOM() "(" [PARAM_VAL() ] ")"
-//}
-//
-//void EXP_ARITH_REEL():
-//{}
-//{
-//    ( REEL() | APPEL_METH() ) [ OPERATEUR_ARITH() EXP_ARITH_REEL() ]
-//}
-//
-//void EXP_ARITH_ENTIER():
-//{}
-//{
-//    ( ENTIER() | APPEL_METH() ) [ OPERATEUR_ARITH() EXP_ARITH_ENTIER() ]
-//}
 
-//OK
+void CONTENU_VAR():
+{}
+{
+    TEXTE() | EXP_ARITH() | CONDITION() | NOM_VAR()
+}
+
+
+void PARAM_VAL():
+{}
+{
+   CONTENU_VAR() [ "," PARAM_VAL() ]
+}
+
+void APPEL_METH():
+{}
+{
+   NOM() "(" [PARAM_VAL() ] ")"
+}
+
+void EXP_ARITH_REEL():
+{}
+{
+   ( REEL() | APPEL_METH() ) [ OPERATEUR_ARITH() EXP_ARITH_REEL() ]
+}
+
+void EXP_ARITH_ENTIER():
+{}
+{
+   ( ENTIER() | APPEL_METH() ) [ OPERATEUR_ARITH() EXP_ARITH_ENTIER() ]
+}
+
+
 void OPERATEUR_ARITH():
 {}
 {
     "+" | "*" | "-" | "/"
 }
-//
-//
-//void EXP_ARITH():
-//{}
-//{
-//    EXP_ARITH_ENTIER() | EXP_ARITH_REEL()
-//}
-//
-//void CONDITION():
-//{}
-//{
-//    ( BOOLEEN() | NOM_VAR() | EXP_COMP() ) EXP_BOOL()
-//}
-//
-//void EXP_BOOL():
-//{}
-//{
-//    [ OPERATEUR_LOGIQUE() CONDITION() ]
-//}
 
-//OK
+
+void EXP_ARITH():
+{}
+{
+   EXP_ARITH_ENTIER() | EXP_ARITH_REEL()
+}
+
+void CONDITION():
+{}
+{
+   ( BOOLEEN() | NOM_VAR() | EXP_COMP() ) EXP_BOOL()
+}
+
+void EXP_BOOL():
+{}
+{
+   [ OPERATEUR_LOGIQUE() CONDITION() ]
+}
+
+
 void OPERATEUR_LOGIQUE():
 {}
 {
     "et" | "ou" | "non"
 }
 
-//void OPERATEUR_COMPARAISON():
-//{}
-//{
-//    OPERATEUR_EGAL() | OPERATEUR_RELATIF()
-//}
+void OPERATEUR_COMPARAISON():
+{}
+{
+   OPERATEUR_EGAL() | OPERATEUR_RELATIF()
+}
 
 
-//
+
 void OPERATEUR_EGAL():
 {}
 {
     "=" | "!="
 }
 
-//
-//void OPERATEUR_RELATIF():
-//{}
-//{
-//     "<" | ">" | "<=" | ">="
-//}
-//
-//void EXP_COMP():
-//{}
-//{
-//   EXP_COMP_ENTIER() | EXP_COMP_REEL() | EXP_COMP_TXT()
-//}
-//
-//void EXP_COMP_ENTIER():
-//{}
-//{
-//    EXP_ARITH_ENTIER() OPERATEUR_COMPARAISON() EXP_ARITH_ENTIER()
-//}
-//
-//void EXP_COMP_REEL():
-//{}
-//{
-//    EXP_ARITH_REEL() OPERATEUR_COMPARAISON() EXP_ARITH_REEL()
-//}
-//
-//void EXP_COMP_TXT():
-//{}
-//{
-//    ( TEXTE() | APPEL_METH() ) OPERATEUR_EGAL() ( TEXTE() | APPEL_METH() )
-//}
-//
+
+void OPERATEUR_RELATIF():
+{}
+{
+     "<" | ">" | "<=" | ">="
+}
+
+
+void EXP_COMP():
+{}
+{
+  EXP_COMP_ENTIER() | EXP_COMP_REEL() | EXP_COMP_TXT()
+}
+
+void EXP_COMP_ENTIER():
+{}
+{
+   EXP_ARITH_ENTIER() OPERATEUR_COMPARAISON() EXP_ARITH_ENTIER()
+}
+
+void EXP_COMP_REEL():
+{}
+{
+   EXP_ARITH_REEL() OPERATEUR_COMPARAISON() EXP_ARITH_REEL()
+}
+
+void EXP_COMP_TXT():
+{}
+{
+   ( TEXTE() | APPEL_METH() ) OPERATEUR_EGAL() ( TEXTE() | APPEL_METH() )
+}
+
+
+void DECL_FONC(): 
+{}
+{
+    "Fonction" ESPACE() DECL_METH()
+}
+
+void DECL_PROC(): 
+{}
+{
+    "Procedure" ESPACE() DECL_METH()
+}
+
+void DECL_METH(): 
+{}
+{
+    TYPE_VAR() ESPACE() NOM() "(" [PARAM()] ")"
+}
+
+void PARAM(): 
+{}
+{
+    MINSUCULE() NOM_VAR_2() ":" TYPE_VAR() ["," ESPACE() PARAM()]
+}
