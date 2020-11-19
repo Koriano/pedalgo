@@ -26,129 +26,48 @@ SKIP : {
 |"\r"
 }
 
+TOKEN : {
+    <NOMBRE_NN: (["0"-"9"]){1,127}(["1"-"9"])>
+    | <ZERO : ("0")+>
+    | <REEL : ("-")?(["0"-"9"]){1,63}(".")(["0"-"9"]){1,63}>
+    | <ENTIER : ("-")? <NOMBRE_NN> | 
+                ("-")? <ZERO>>
+    | <ESPACE : (" ")+>
+    | <MAJUSCULE : (["A"-"Z"])>
+    | <MINUSCULE : (["a"-"z"])>
+    | <NOM : <MINUSCULE> (<MAJUSCULE> | <MINUSCULE> | <ZERO> | <NOMBRE_NN> | "_"){1,64}>
+    | <TEXTE : ("\"") (<MAJUSCULE>|<MINUSCULE>|<ZERO>|<NOMBRE_NN>|<ESPACE>)* ("\"")>
+    | <CR : ((<ESPACE>("#")(<MAJUSCULE>|<MINUSCULE>|<ZERO>|<NOMBRE_NN>)*)?("\n"))+>
+}
+
 SimpleNode Start() : {}
 {
-  DECL_FONC() ";"
+  CONTENU_VAR() ";"
   { return jjtThis; }
-}
-
-void CR():
-{}
-{
-    [ [ ESPACE() ] "#" TEXTE_2() ] "\n" [ CR() ]
-}
-
-void TEXTE():
-{}
-{
-    "\"" TEXTE_2() "\""
-}
-
-void TEXTE_2():
-{}
-{
-    [ (MAJUSCULE() | MINSUCULE() | CHIFFRE() | CHAR_SPEC() )  TEXTE_2() ]
-}
-
-void REEL():
-{}
-{
-    ["-"] NOMBRE() "." NOMBRE()
-}
-
-void ENTIER():
-{}
-{
-    ["-"] NOMBRE()
-}
-
-void NOMBRE():
-{}
-{
-    CHIFFRE() [ NOMBRE() ]
-}
-
-void NOMBRE_NN():
-{}
-{
-    CHIFFRE_NN() [ NOMBRE() ] | "0" NOMBRE_NN()
-}
-
-
-void CHAR_SPEC():
-{}
-{
-    "," | "é" | "è" | "à" | "ù" | "ç"| ";" | "." | "!" | "/" | "\\" | ":" | "?"| "%" | "^" |
-    "$" | "*" | "@" | "_" | "-" | "(" | ")" | "#" | "+" | "=" | "{" | "}" | "~" | "&" | "°" |
-    "<" | ">" | "'" | ESPACE()
 }
 
 void TYPE_VAR():
 {}
 {
-    "entier" | "reel" | "texte" | "booleen"
+    "ENTIER" | "REEL" | "TEXTE" | "BOOLEEN"
 }
 
 void BOOLEEN():
 {}
 {
-    "Vrai" | "Faux"
+    "VRAI" | "FAUX"
 }
-
-void CHIFFRE():
-{}
-{
-    "0" | CHIFFRE_NN()
-}
-
-void CHIFFRE_NN():
-{}
-{
-    "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
-}
-
-void MAJUSCULE():
-{}
-{
-    "A" | "B" | "C" | "D" | "E" | "F" | "G" | "H" | "I" | "J" | "K" | "L" | "M" | "N" | "O" | "P" | "Q" | "R" | "S" | "T" | "U" | "V" | "W" | "X" | "Y" | "Z"
-}
-
-void MINSUCULE():
-{}
-{
-    "a" | "b" | "c" | "d" | "e" | "f" | "g" | "h" | "i" | "j" | "k" | "l" | "m" | "n" | "o" | "p" | "q" | "r" | "s" | "t" | "u" | "v" | "w" | "x" | "y" | "z"
-}
-
-void ESPACE():
-{}
-{
-    " " [ ESPACE() ]
-}
-
 
 void TABLEAU():
 {}
 {
-   [ "[" NOMBRE_NN() "]" ]
-}
-
-
-void NOM_VAR_2():
-{}
-{
-    [ (MAJUSCULE() | MINSUCULE() | CHIFFRE() | "_") NOM_VAR_2() ]
-}
-
-void NOM():
-{}
-{
-    MINSUCULE() NOM_VAR_2()
+   [ "[" <NOMBRE_NN> "]" ]
 }
 
 void NOM_VAR():
 {}
 {
-    NOM() TABLEAU()
+    <NOM> TABLEAU()
 }
 
 void DECL_VAR():
@@ -157,13 +76,11 @@ void DECL_VAR():
     NOM_VAR() ":" TYPE_VAR()
 }
 
-
 void CONTENU_VAR():
 {}
 {
-    TEXTE() | EXP_ARITH() | CONDITION() | NOM_VAR()
+    <TEXTE> | EXP_ARITH()
 }
-
 
 void PARAM_VAL():
 {}
@@ -174,19 +91,13 @@ void PARAM_VAL():
 void APPEL_METH():
 {}
 {
-   NOM() "(" [PARAM_VAL() ] ")"
+   <NOM> "(" [PARAM_VAL() ] ")"
 }
 
-void EXP_ARITH_REEL():
+void EXP_ARITH():
 {}
 {
-   ( REEL() | APPEL_METH() ) [ OPERATEUR_ARITH() EXP_ARITH_REEL() ]
-}
-
-void EXP_ARITH_ENTIER():
-{}
-{
-   ( ENTIER() | APPEL_METH() ) [ OPERATEUR_ARITH() EXP_ARITH_ENTIER() ]
+   ( <REEL> | <ENTIER> | APPEL_METH() ) [ OPERATEUR_ARITH() EXP_ARITH() ]
 }
 
 
@@ -196,36 +107,23 @@ void OPERATEUR_ARITH():
     "+" | "*" | "-" | "/"
 }
 
-
-void EXP_ARITH():
-{}
-{
-   EXP_ARITH_ENTIER() | EXP_ARITH_REEL()
-}
-
 void CONDITION():
 {}
 {
-   ( BOOLEEN() | NOM_VAR() | EXP_COMP() ) EXP_BOOL()
-}
-
-void EXP_BOOL():
-{}
-{
-   [ OPERATEUR_LOGIQUE() CONDITION() ]
+   ( BOOLEEN() | NOM_VAR() | EXP_COMP() ) [ OPERATEUR_LOGIQUE() CONDITION() ]
 }
 
 
 void OPERATEUR_LOGIQUE():
 {}
 {
-    "et" | "ou" | "non"
+    "ET" | "OU" | "NON"
 }
 
 void OPERATEUR_COMPARAISON():
 {}
 {
-   OPERATEUR_EGAL() | OPERATEUR_RELATIF()
+   "=" | "!=" | OPERATEUR_RELATIF()
 }
 
 
@@ -233,7 +131,7 @@ void OPERATEUR_COMPARAISON():
 void OPERATEUR_EGAL():
 {}
 {
-    "=" | "!="
+    "==" | "!=="
 }
 
 
@@ -247,48 +145,42 @@ void OPERATEUR_RELATIF():
 void EXP_COMP():
 {}
 {
-  EXP_COMP_ENTIER() | EXP_COMP_REEL() | EXP_COMP_TXT()
+  EXP_COMP_VALEUR() | EXP_COMP_TXT()
 }
 
-void EXP_COMP_ENTIER():
+void EXP_COMP_VALEUR():
 {}
 {
-   EXP_ARITH_ENTIER() OPERATEUR_COMPARAISON() EXP_ARITH_ENTIER()
-}
-
-void EXP_COMP_REEL():
-{}
-{
-   EXP_ARITH_REEL() OPERATEUR_COMPARAISON() EXP_ARITH_REEL()
+   EXP_ARITH() OPERATEUR_COMPARAISON() EXP_ARITH()
 }
 
 void EXP_COMP_TXT():
 {}
 {
-   ( TEXTE() | APPEL_METH() ) OPERATEUR_EGAL() ( TEXTE() | APPEL_METH() )
+   ( <TEXTE> | APPEL_METH() ) OPERATEUR_EGAL() ( <TEXTE> | APPEL_METH() )
 }
 
 
 void DECL_FONC(): 
 {}
 {
-    "Fonction" ESPACE() DECL_METH()
+    "Fonction" <ESPACE> DECL_METH()
 }
 
 void DECL_PROC(): 
 {}
 {
-    "Procedure" ESPACE() DECL_METH()
+    "Procedure" <ESPACE> DECL_METH()
 }
 
 void DECL_METH(): 
 {}
 {
-    TYPE_VAR() ESPACE() NOM() "(" [PARAM()] ")"
+    TYPE_VAR() <ESPACE> <NOM> "(" [PARAM()] ")"
 }
 
 void PARAM(): 
 {}
 {
-    MINSUCULE() NOM_VAR_2() ":" TYPE_VAR() ["," ESPACE() PARAM()]
+    <NOM> ":" TYPE_VAR() ["," <ESPACE> PARAM()]
 }
