@@ -1,0 +1,160 @@
+PARSER_BEGIN(Grammar2)
+
+/**
+ * An Arithmetic Grammar2.
+ */
+public class Grammar2 {
+
+  /** Main entry point. */
+  public static void main(String args[]) {
+    System.out.println("Reading from standard input...");
+    Grammar2 t = new Grammar2(System.in);
+    try {
+      SimpleNode n = t.Start();
+      n.dump("");
+    } catch (Exception e) {
+      System.out.println(e.getMessage());
+      e.printStackTrace();
+    }
+  }
+}
+
+PARSER_END(Grammar2)
+
+SKIP : {
+"\t"
+|"\r"
+}
+TOKEN : {
+    <MAJUSCULE : (["A"-"Z"])>
+  | <MINUSCULE : (["a"-"z"])>
+  | <NOMBRE_NN: ((["0"-"9"]){0,63} (["1"-"9"]) (["0"-"9"]){0,63})>
+  | <ZERO : ("0")+>
+  | <REEL : (["0"-"9"]){1,63}(".")(["0"-"9"]){1,63}>
+}
+
+SimpleNode Start() : {}
+{
+  CALCUL_BOOLEEN() ";"
+  { return jjtThis; }
+}
+
+// Valeurs primitives
+void ENTIER() : {}
+{
+  (<NOMBRE_NN> | <ZERO>)
+}
+
+
+void TEXTE() : {}{
+    "\"" TEXTE_EP() "\""
+}
+void TEXTE_EP ():{}{
+    [(<MAJUSCULE> | <MINUSCULE> | <ZERO> | <NOMBRE_NN> | "_") TEXTE_EP()]
+}
+
+void BOOLEEN():{}
+{
+    "VRAI" | "FAUX"
+}
+// Déclaration variables
+
+void TYPE_VAR():
+{}
+{
+    "ENTIER" | "REEL" | "TEXTE" | "BOOLEEN"
+}
+
+void TABLEAU(): {}
+{
+   [ "[" <NOMBRE_NN> "]" ]
+}
+
+void NOM():
+{}
+{
+    <MINUSCULE> NOM_EP()
+}
+
+void NOM_EP():
+{}
+{
+    [(<MAJUSCULE> | <MINUSCULE> | <ZERO> | <NOMBRE_NN> | "_") NOM_EP()]
+}
+
+void NOM_VAR():
+{}
+{
+    NOM() TABLEAU()
+}
+
+void DECL_VAR():
+{}
+{
+    NOM_VAR() ":" TYPE_VAR()
+}
+
+void CONTENU_VAR() : {}
+{
+   CALCUL() | TEXTE()
+}
+
+void CALCUL() : {}
+{
+   ADDITION()
+}
+
+void ADDITION() : {}
+{
+    MULTIPLICATION() ( ("+" | "-") MULTIPLICATION() )*
+}
+
+void MULTIPLICATION() : {}
+{
+  EXPRESSION_UNAIRE() ( ( "*" | "/" | "%" ) EXPRESSION_UNAIRE() )*
+}
+
+void EXPRESSION_UNAIRE() : {}
+{
+   ("(" CALCUL() ")") | ENTIER() | <REEL> // | VARIABLE
+}
+
+void CALCUL_BOOLEEN() : {}
+{
+  EXPRESSION_OU()
+}
+void EXPRESSION_OU() : {}
+{
+   EXPRESSION_ET() ( " OU "  EXPRESSION_ET() )*
+}
+void EXPRESSION_ET() : {}
+{
+  EXPRESSION_BOOLEEN_UNAIRE() ( " ET " EXPRESSION_BOOLEEN_UNAIRE() )*
+}
+void EXPRESSION_BOOLEEN_UNAIRE() : {}
+{
+   ["NON "] (("(" CALCUL_BOOLEEN() ")") | BOOLEEN()) // - VARIABLE()
+}
+
+void OPERATEUR_ARITH():
+{}
+{
+    "+" | "*" | "-" | "/"
+}
+void OPERATEUR_LOGIQUE():
+{}
+{
+    "ET" | "OU" | "NON"
+}
+void OPERATEUR_EGAL():
+{}
+{
+    "==" | "!=="
+}
+
+void OPERATEUR_RELATIF():
+{}
+{
+     "<" | ">" | "<=" | ">="
+}
+
