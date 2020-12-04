@@ -3,49 +3,83 @@ public interface Grammar2TreeConstants
 {
   public int JJTSTART = 0;
   public int JJTENTIER = 1;
-  public int JJTTEXTE = 2;
-  public int JJTTEXTE_EP = 3;
-  public int JJTBOOLEEN = 4;
-  public int JJTTYPE_VAR = 5;
-  public int JJTTABLEAU = 6;
-  public int JJTNOM = 7;
-  public int JJTNOM_EP = 8;
-  public int JJTNOM_VAR = 9;
-  public int JJTDECL_VAR = 10;
-  public int JJTCONTENU_VAR = 11;
-  public int JJTINST_VAR = 12;
-  public int JJTCALCUL = 13;
-  public int JJTSOMME = 14;
-  public int JJTPRODUIT = 15;
-  public int JJTEXPRESSION_UNAIRE = 16;
-  public int JJTOPERATEUR_ARITH = 17;
-  public int JJTOPERATEUR_LOGIQUE = 18;
-  public int JJTOPERATEUR_EGAL = 19;
-  public int JJTOPERATEUR_RELATIF = 20;
+  public int JJTCORPS_VAR = 2;
+  public int JJTTYPE_VAR = 3;
+  public int JJTTABLEAU = 4;
+  public int JJTNOM_VAR = 5;
+  public int JJTDECL_VAR = 6;
+  public int JJTDECL_CONST = 7;
+  public int JJTCONTENU_VAR = 8;
+  public int JJTINST_VAR = 9;
+  public int JJTCORPS_METH = 10;
+  public int JJTDECL_FONC = 11;
+  public int JJTDECL_PROC = 12;
+  public int JJTDECL_METH = 13;
+  public int JJTDECL_PARAMS = 14;
+  public int JJTAPPEL_METH = 15;
+  public int JJTPARAMS = 16;
+  public int JJTPARAM_VAL = 17;
+  public int JJTAPPEL = 18;
+  public int JJTEXPRESSION_UNAIRE = 19;
+  public int JJTCALCUL = 20;
+  public int JJTMULTIPLICATION = 21;
+  public int JJTEXPRESSION_UNAIRE_BOOL = 22;
+  public int JJTCALCUL_BOOLEEN = 23;
+  public int JJTEXPRESSION_ET = 24;
+  public int JJTCOMPARAISON = 25;
+  public int JJTCOMP_ARITH = 26;
+  public int JJTCOMP_LOGIQUE = 27;
+  public int JJTCODE = 28;
+  public int JJTSI = 29;
+  public int JJTBOUCLE = 30;
+  public int JJTPOUR = 31;
+  public int JJTTANTQUE = 32;
+  public int JJTOPERATEUR_EGAL = 33;
+  public int JJTOPERATEUR_RELATIF = 34;
+  public int JJTBLOC_VAR = 35;
+  public int JJTBLOC_METH = 36;
+  public int JJTMAIN = 37;
 
 
   public String[] jjtNodeName = {
     "Start",
     "ENTIER",
-    "TEXTE",
-    "TEXTE_EP",
-    "BOOLEEN",
+    "CORPS_VAR",
     "TYPE_VAR",
     "TABLEAU",
-    "NOM",
-    "NOM_EP",
     "NOM_VAR",
     "DECL_VAR",
+    "DECL_CONST",
     "CONTENU_VAR",
     "INST_VAR",
-    "CALCUL",
-    "SOMME",
-    "PRODUIT",
+    "CORPS_METH",
+    "DECL_FONC",
+    "DECL_PROC",
+    "DECL_METH",
+    "DECL_PARAMS",
+    "APPEL_METH",
+    "PARAMS",
+    "PARAM_VAL",
+    "APPEL",
     "EXPRESSION_UNAIRE",
-    "OPERATEUR_ARITH",
-    "OPERATEUR_LOGIQUE",
+    "CALCUL",
+    "MULTIPLICATION",
+    "EXPRESSION_UNAIRE_BOOL",
+    "CALCUL_BOOLEEN",
+    "EXPRESSION_ET",
+    "COMPARAISON",
+    "COMP_ARITH",
+    "COMP_LOGIQUE",
+    "CODE",
+    "SI",
+    "BOUCLE",
+    "POUR",
+    "TANTQUE",
     "OPERATEUR_EGAL",
     "OPERATEUR_RELATIF",
+    "BLOC_VAR",
+    "BLOC_METH",
+    "MAIN",
   };
 }
-/* JavaCC - OriginalChecksum=17a3837b9baf626f842fe77c596ea780 (do not edit this line) */
+/* JavaCC - OriginalChecksum=13a7c1fbc4e21d0cc2090aed049a97c4 (do not edit this line) */

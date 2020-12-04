@@ -24,23 +24,28 @@ PARSER_END(Grammar2)
 SKIP : {
 "\t"
 |"\r"
+|"\n"
 }
 
 TOKEN : {
-    <MAJUSCULE : (["A"-"Z"])>
-  | <MINUSCULE : (["a"-"z"])>
-  | <NOMBRE_NN: ((["0"-"9"]){0,63} (["1"-"9"]) (["0"-"9"]){0,63})>
+    <#MAJUSCULE : (["A"-"Z"])>
+  | <#MINUSCULE : (["a"-"z"])>
+  | <NOMBRE_NN: ((["0"-"9"])* (["1"-"9"]) (["0"-"9"])*)>
   | <ZERO : ("0")+>
-  | <REEL : (["0"-"9"]){1,63}(".")(["0"-"9"]){1,63}>
+  | <REEL : (["0"-"9"])+(".")(["0"-"9"])+>
   | <ASSIGNATION : "<-">
+  | <NOM : <MINUSCULE> (<MAJUSCULE> | <MINUSCULE> | ["0"-"9"] | "_")*>
+  | <TEXTE : "\"" (<MAJUSCULE> | <MINUSCULE> | ["0"-"9"] | "_")* "\"">
+  | <BOOLEEN : "VRAI" | "FAUX">
 }
 
 // Main
 SimpleNode Start() : {}
 {
-  INST_VAR() ";"
+  MAIN() ";"
   { return jjtThis; }
 }
+
 
 // Valeurs primitives
 void ENTIER() : {}
@@ -49,19 +54,13 @@ void ENTIER() : {}
 }
 
 
-void TEXTE() : {}{
-    "\"" TEXTE_EP() "\""
-}
-void TEXTE_EP ():{}{
-    [(<MAJUSCULE> | <MINUSCULE> | <ZERO> | <NOMBRE_NN> | "_") TEXTE_EP()]
-}
-
-void BOOLEEN():{}
-{
-    "VRAI" | "FAUX"
-}
-
 // Déclaration variables
+void CORPS_VAR():
+{}
+{
+    (DECL_VAR() | DECL_CONST()) [CORPS_VAR()]
+}
+
 void TYPE_VAR():
 {}
 {
@@ -70,25 +69,13 @@ void TYPE_VAR():
 
 void TABLEAU(): {}
 {
-   [ "[" <NOMBRE_NN> "]" ]
-}
-
-void NOM():
-{}
-{
-    <MINUSCULE> NOM_EP()
-}
-
-void NOM_EP():
-{}
-{
-    [(<MAJUSCULE> | <MINUSCULE> | <ZERO> | <NOMBRE_NN> | "_") NOM_EP()]
+   "[" <NOMBRE_NN> "]"
 }
 
 void NOM_VAR():
 {}
 {
-    NOM() TABLEAU()
+    <NOM> [TABLEAU()]
 }
 
 void DECL_VAR():
@@ -97,56 +84,167 @@ void DECL_VAR():
     NOM_VAR() ":" TYPE_VAR()
 }
 
+void DECL_CONST():
+{}
+{
+    "CONST " DECL_VAR() <ASSIGNATION> CONTENU_VAR()
+}
+
 void CONTENU_VAR() : {}
 {
-   CALCUL() | TEXTE()
+    LOOKAHEAD(2) CALCUL_BOOLEEN() | CALCUL() | <TEXTE>
 }
 
 void INST_VAR():
 {}
 {
-  NOM() <ASSIGNATION> CONTENU_VAR()
+   NOM_VAR() <ASSIGNATION> CONTENU_VAR()
 }
 
-// Expressions arithmétiques et booléennes
-void CALCUL() : {}
+// Méthodes
+void CORPS_METH():
+{}
 {
-    SOMME()
+    DECL_FONC() [CODE()] "retourne " CONTENU_VAR() "FinFonction" 
+    | DECL_PROC() CODE() "FinProcedure" 
 }
 
-void SOMME() : {}
+void DECL_FONC():
+{}
 {
-    PRODUIT() ( ("+" | "-" | " OU ") PRODUIT() )*
+    "Fonction " TYPE_VAR() " " DECL_METH()
 }
 
-void PRODUIT() : {}
+void DECL_PROC():
+{}
 {
-  EXPRESSION_UNAIRE() ( ( "*" | "/" | "%" | " ET ") EXPRESSION_UNAIRE() )*
+    "Procedure " DECL_METH()
 }
 
+void DECL_METH():
+{}
+{
+    <NOM> "(" [DECL_PARAMS()] ")"
+}
+
+void DECL_PARAMS():
+{}
+{
+  <NOM> ":" TYPE_VAR() ["," DECL_PARAMS()]
+}
+
+void APPEL_METH():
+{}
+{
+    <NOM> PARAMS()
+}
+
+void PARAMS():
+{}
+{
+   "(" [PARAM_VAL()] ")"
+}
+
+void PARAM_VAL():
+{}
+{
+  CONTENU_VAR() ["," PARAM_VAL()]
+}
+
+void APPEL():
+{}
+{
+  LOOKAHEAD(2) APPEL_METH() | NOM_VAR()
+}
+
+// Expressions arithmétiques
 void EXPRESSION_UNAIRE() : {}
 {
-     ( ( ["NON "] ( "(" CALCUL() ")" | BOOLEEN() | NOM() ) ) | ENTIER() | <REEL> )
+    "(" CALCUL() ")" | APPEL() | ENTIER() | <REEL>
 }
 
+void CALCUL() : {}
+{
+    MULTIPLICATION() ( ("+" | "-") MULTIPLICATION() )*
+}
+
+void MULTIPLICATION() : {}
+{
+    EXPRESSION_UNAIRE() ( ( "*" | "/" | "%") EXPRESSION_UNAIRE() )*
+}
+
+// Expressions booléennes
+void EXPRESSION_UNAIRE_BOOL() : {}
+{
+    ["NON "] ( LOOKAHEAD(2) "(" CALCUL_BOOLEEN() ")" | <BOOLEEN> | LOOKAHEAD(2) APPEL() | COMP_ARITH())
+}
+
+void CALCUL_BOOLEEN():
+{}
+{
+    EXPRESSION_ET() (" OU " EXPRESSION_ET())*
+}
+
+void EXPRESSION_ET():
+{}
+{
+    COMPARAISON() (" ET " COMPARAISON())*
+}
+
+// Comparaisons
+void COMPARAISON():
+{}
+{
+  COMP_LOGIQUE()
+}
+
+void COMP_ARITH():
+{}
+{
+  EXPRESSION_UNAIRE() (OPERATEUR_RELATIF() | OPERATEUR_EGAL())  EXPRESSION_UNAIRE()
+}
+
+void COMP_LOGIQUE():
+{}
+{
+  EXPRESSION_UNAIRE_BOOL() (OPERATEUR_EGAL() EXPRESSION_UNAIRE_BOOL())*
+  | <TEXTE> OPERATEUR_EGAL() <TEXTE>
+}
 
 // Ligne de code générique
-
+void CODE():
+{}
+{
+  (SI() | BOUCLE() | LOOKAHEAD(5) INST_VAR() | APPEL()) [CODE()] // LOOKAHEAD(5) -> <NOM> + '[' + <NOMBRE_NN> + ']' + epsilon ou '<-'
+}
 
 // Condition
+void SI():
+{}
+{
+  "Si " CALCUL_BOOLEEN() CODE() ["Sinon " CODE()] "FinSi"
+}
 
+// Boucles
+void BOUCLE():
+{}
+{
+  POUR() | TANTQUE()
+}
+
+void POUR():
+{}
+{
+  "Pour " INST_VAR() ";" CALCUL_BOOLEEN() ";" INST_VAR() CODE() "FinPour"
+}
+
+void TANTQUE():
+{}
+{
+  "TantQue " CALCUL_BOOLEEN() CODE() "FinTantQue"
+}
 
 // Opérateurs
-void OPERATEUR_ARITH():
-{}
-{
-    "+" | "*" | "-" | "/"
-}
-void OPERATEUR_LOGIQUE():
-{}
-{
-    "ET" | "OU" | "NON"
-}
 void OPERATEUR_EGAL():
 {}
 {
@@ -159,3 +257,21 @@ void OPERATEUR_RELATIF():
      "<" | ">" | "<=" | ">="
 }
 
+// Les gros blocs
+void BLOC_VAR():
+{}
+{
+    "Var" CORPS_VAR() "FinVar"
+}
+
+void BLOC_METH():
+{}
+{
+  "Meth" (CORPS_METH())+ "FinMeth"
+}
+
+void MAIN():
+{}
+{
+    "Debut" CODE() "Fin"
+}
