@@ -10,13 +10,14 @@ public class Grammar2 {
   /** Main entry point. */
   public static void main(String args[]) {
     System.out.println("Reading from standard input...");
-    //Grammar2 t = new Grammar2(System.in);
-    Grammar2 t = null;
+    Grammar2 t = new Grammar2(System.in);
+    /*Grammar2 t = null;
     try {
       t = new Grammar2(new FileInputStream(new File("MOTMYSTERE.txt")));
     } catch (FileNotFoundException e) {
       e.printStackTrace();
     }
+    */
     try {
       SimpleNode n = t.Start();
       n.dump("");
@@ -31,8 +32,6 @@ PARSER_END(Grammar2)
 
 SKIP : {
 "\t"
-|"\r"
-|"\n"
 }
 
 TOKEN : {
@@ -41,16 +40,18 @@ TOKEN : {
   | <NOMBRE_NN: ((["0"-"9"])* (["1"-"9"]) (["0"-"9"])*)>
   | <ZERO : ("0")+>
   | <REEL : (["0"-"9"])+(".")(["0"-"9"])+>
-  | <ASSIGNATION : "<-">
+  | <ESPACE : (" ")+>
+  | <ASSIGNATION : (<ESPACE>)? "<-" (<ESPACE>)?>
   | <NOM : <MINUSCULE> (<MAJUSCULE> | <MINUSCULE> | ["0"-"9"] | "_")*>
   | <TEXTE : "\"" (<MAJUSCULE> | <MINUSCULE> | ["0"-"9"] | "_" | " " | "!")* "\"">
   | <BOOLEEN : "VRAI" | "FAUX">
+  | <CR : (<ESPACE>)? ("#" (<MAJUSCULE> | <MINUSCULE> | ["0"-"9"] | "_" | " " | "!")*)? "\r\n">
 }
 
 // Main
 SimpleNode Start() : {}
 {
-  ALGORITHME() ";"
+  CORPS_METH() ";"
   { return jjtThis; }
 }
 
@@ -66,7 +67,8 @@ void ENTIER() : {}
 void CORPS_VAR():
 {}
 {
-    (DECL_VAR() | DECL_CONST()) [CORPS_VAR()]
+  <CR> [CORPS_VAR()]
+  | (DECL_VAR() | DECL_CONST()) <CR> [CORPS_VAR()]
 }
 
 void TYPE_VAR():
@@ -89,18 +91,18 @@ void NOM_VAR():
 void DECL_VAR():
 {}
 {
-    NOM_VAR() ":" TYPE_VAR()
+    NOM_VAR() [<ESPACE>] ":" [<ESPACE>] TYPE_VAR()
 }
 
 void DECL_CONST():
 {}
 {
-    "CONST " DECL_VAR() <ASSIGNATION> CONTENU_VAR()
+    "CONST" <ESPACE> DECL_VAR() <ASSIGNATION> CONTENU_VAR()
 }
 
 void CONTENU_VAR() : {}
 {
-    LOOKAHEAD(999999999) CALCUL_BOOLEEN() | CALCUL() | <TEXTE> // Oui
+    LOOKAHEAD(999999999) CALCUL_BOOLEEN() | CALCUL() | <TEXTE> // LL(infinie)
 }
 
 void INST_VAR():
@@ -113,20 +115,21 @@ void INST_VAR():
 void CORPS_METH():
 {}
 {
-    DECL_FONC() [CODE()] "retourne " CONTENU_VAR() "FinFonction" 
-    | DECL_PROC() CODE() "FinProcedure" 
+    <CR> [CORPS_METH()]
+    | (DECL_FONC() <CR> [CODE()] "retourne" <ESPACE> CONTENU_VAR() (<CR>)+ "FinFonction"
+      | DECL_PROC() <CR> CODE() "FinProcedure") <CR> [CORPS_METH()]
 }
 
 void DECL_FONC():
 {}
 {
-    "Fonction " TYPE_VAR() " " DECL_METH()
+    "Fonction" <ESPACE> TYPE_VAR() <ESPACE> DECL_METH()
 }
 
 void DECL_PROC():
 {}
 {
-    "Procedure " DECL_METH()
+    "Procedure" <ESPACE> DECL_METH()
 }
 
 void DECL_METH():
@@ -138,7 +141,7 @@ void DECL_METH():
 void DECL_PARAMS():
 {}
 {
-  <NOM> ":" TYPE_VAR() ["," DECL_PARAMS()]
+  [<ESPACE>] <NOM> [<ESPACE>] ":" [<ESPACE>] TYPE_VAR() [<ESPACE>] ["," DECL_PARAMS()]
 }
 
 void APPEL_METH():
@@ -156,7 +159,7 @@ void PARAMS():
 void PARAM_VAL():
 {}
 {
-  CONTENU_VAR() ["," PARAM_VAL()]
+  [<ESPACE>] CONTENU_VAR() [<ESPACE>] ["," PARAM_VAL()]
 }
 
 void APPEL():
@@ -168,35 +171,35 @@ void APPEL():
 // Expressions arithmétiques
 void EXPRESSION_UNAIRE() : {}
 {
-    "(" CALCUL() ")" | APPEL() | ENTIER() | <REEL>
+    "(" [<ESPACE>] CALCUL() [<ESPACE>] ")" | APPEL() | ENTIER() | <REEL>
 }
 
 void CALCUL() : {}
 {
-    MULTIPLICATION() ( ("+" | "-") MULTIPLICATION() )*
+    MULTIPLICATION() ( [<ESPACE>] ("+" | "-") [<ESPACE>] MULTIPLICATION() )*
 }
 
 void MULTIPLICATION() : {}
 {
-    EXPRESSION_UNAIRE() ( ( "*" | "/" | "%") EXPRESSION_UNAIRE() )*
+    EXPRESSION_UNAIRE() ( [<ESPACE>] ( "*" | "/" | "%") [<ESPACE>] EXPRESSION_UNAIRE() )*
 }
 
 // Expressions booléennes
 void EXPRESSION_UNAIRE_BOOL() : {}
 {
-    ["NON "] ( LOOKAHEAD(3) "(" CALCUL_BOOLEEN() ")" | <BOOLEEN> | LOOKAHEAD(3) APPEL() | LOOKAHEAD(2) COMP_ARITH()) // Conflict variable/appel calcul_booleen et comp_arith
+    ["NON" <ESPACE>] ( LOOKAHEAD(3) "(" [<ESPACE>] CALCUL_BOOLEEN() [<ESPACE>] ")" | <BOOLEEN> | LOOKAHEAD(3) APPEL() | LOOKAHEAD(2) COMP_ARITH()) // Conflict variable/appel calcul_booleen et comp_arith
 }
 
 void CALCUL_BOOLEEN():
 {}
 {
-    EXPRESSION_ET() (" OU " EXPRESSION_ET())*
+    EXPRESSION_ET() ( <ESPACE> "OU" <ESPACE> EXPRESSION_ET())*
 }
 
 void EXPRESSION_ET():
 {}
 {
-    COMPARAISON() (" ET " COMPARAISON())*
+    COMPARAISON() ( <ESPACE> "ET" <ESPACE> COMPARAISON())*
 }
 
 // Comparaisons
@@ -209,28 +212,29 @@ void COMPARAISON():
 void COMP_ARITH():
 {}
 {
-  EXPRESSION_UNAIRE() (OPERATEUR_RELATIF() | OPERATEUR_EGAL())  EXPRESSION_UNAIRE()
+  EXPRESSION_UNAIRE() [<ESPACE>] (OPERATEUR_RELATIF() | OPERATEUR_EGAL()) [<ESPACE>] EXPRESSION_UNAIRE()
 }
 
 void COMP_LOGIQUE():
 {}
 {
-  EXPRESSION_UNAIRE_BOOL() (OPERATEUR_EGAL() EXPRESSION_UNAIRE_BOOL())*
-  | <TEXTE> OPERATEUR_EGAL() <TEXTE>
+  EXPRESSION_UNAIRE_BOOL() ([<ESPACE>] OPERATEUR_EGAL() [<ESPACE>] EXPRESSION_UNAIRE_BOOL())*
+  | <TEXTE> [<ESPACE>] OPERATEUR_EGAL() [<ESPACE>] <TEXTE>
 }
 
 // Ligne de code générique
 void CODE():
 {}
 {
-  (SI() | BOUCLE() | LOOKAHEAD(5) INST_VAR() | APPEL()) [CODE()] // LOOKAHEAD(5) -> <NOM> + '[' + <NOMBRE_NN> + ']' + epsilon ou '<-'
+  <CR> [CODE()]
+  | (SI() | BOUCLE() | LOOKAHEAD(5) INST_VAR() | APPEL()) <CR> [CODE()] // LOOKAHEAD(5) -> <NOM> + '[' + <NOMBRE_NN> + ']' + epsilon ou '<-'
 }
 
 // Condition
 void SI():
 {}
 {
-  "Si " CALCUL_BOOLEEN() CODE() ["Sinon " CODE()] "FinSi"
+  "Si" <ESPACE> CALCUL_BOOLEEN() <CR> CODE() ["Sinon" <CR> CODE()] "FinSi"
 }
 
 // Boucles
@@ -243,13 +247,13 @@ void BOUCLE():
 void POUR():
 {}
 {
-  "Pour " INST_VAR() ";" CALCUL_BOOLEEN() ";" INST_VAR() CODE() "FinPour"
+  "Pour" <ESPACE> INST_VAR() [<ESPACE>] ";" [<ESPACE>] CALCUL_BOOLEEN() [<ESPACE>] ";" [<ESPACE>] INST_VAR() <CR> CODE() "FinPour"
 }
 
 void TANTQUE():
 {}
 {
-  "TantQue " CALCUL_BOOLEEN() CODE() "FinTantQue"
+  "TantQue" <ESPACE> CALCUL_BOOLEEN() <CR> CODE() "FinTantQue"
 }
 
 // Opérateurs
@@ -269,23 +273,23 @@ void OPERATEUR_RELATIF():
 void BLOC_VAR():
 {}
 {
-    "Var" CORPS_VAR() "FinVar"
+  "Var" <CR> CORPS_VAR() "FinVar"
 }
 
 void BLOC_METH():
 {}
 {
-  "Meth" (CORPS_METH())+ "FinMeth"
+  "Meth" <CR> CORPS_METH() "FinMeth"
 }
 
 void MAIN():
 {}
 {
-    "Debut" CODE() "Fin"
+    "Debut" <CR> CODE() "Fin"
 }
 
 void ALGORITHME():
 {}
 {
-  "Algo " <NOM> BLOC_VAR() BLOC_METH() MAIN()
+  "Algo" <ESPACE> <NOM> (<CR>)+ BLOC_VAR() (<CR>)+ BLOC_METH() (<CR>)+ MAIN() (<CR>)*
 }
