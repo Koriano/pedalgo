@@ -1,0 +1,54 @@
+Algo nombreMystere
+
+Var
+	# variable qui contiendra la valeur saisie par l utilisateur
+	x:ENTIER
+
+	# variable qui contiendra le nom du joueur
+	nom:TEXTE
+
+	# declaration des variables qui contiennent les phrases affichees a la console
+	CONST txt_hors_bornes:TEXTE <- "Veuillez saisir un entier entre 0 et 100"
+	CONST txt_plus_petit:TEXTE <- "Le chiffre est plus petit !"
+	CONST txt_plus_grand:TEXTE <- "Le chiffre est plus grand !"
+	CONST txt_victoire:TEXTE <- "Bravo, vous avez reussi !"
+FinVar
+
+Meth
+	# Affiche un message de bienvenue
+	Procedure bonjour(nom:TEXTE)
+		afficherTexte("Bonjour ")
+		afficherTexte(nom)
+		afficherTexte(" !")
+	FinProcedure
+FinMeth
+
+Debut
+	# On dit bonjour a l utilisateur
+	nom <- saisirtexte()
+	bonjour(nom)
+	
+	# On redemande a l utilisateur un nombre tant qu il n a pas gagne
+	TantQue NON (64 == x)
+		x <- lireEntier()
+
+		# Si la valeur rentree n est pas dans les bornes
+		Si ((0 >= x) OU (100 <= x))
+			afficherTexte(txt_hors_bornes)
+		Sinon 
+
+			# Si la valeur est plus petite
+			Si (64 < x)
+				afficherTexte(txt_plus_petit)
+			Sinon
+				# Si la valeur est plus grande
+				Si (64 > x)
+					afficherTexte(txt_plus_grand)
+				Sinon 
+					afficherTexte(txt_victoire)
+					# Finsi
+				FinSi
+			FinSi
+		FinSi
+	FinTantQue
+Fin

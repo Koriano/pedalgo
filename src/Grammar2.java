@@ -10,14 +10,13 @@ public class Grammar2/*@bgen(jjtree)*/implements Grammar2TreeConstants, Grammar2
   /** Main entry point. */
   public static void main(String args[]) {
     System.out.println("Reading from standard input...");
-    Grammar2 t = new Grammar2(System.in);
-    /*Grammar2 t = null;
+    //Grammar2 t = new Grammar2(System.in);
+    Grammar2 t = null;
     try {
-      t = new Grammar2(new FileInputStream(new File("MOTMYSTERE.txt")));
+      t = new Grammar2(new FileInputStream(new File("NOMBREMYSTERE.txt")));
     } catch (FileNotFoundException e) {
       e.printStackTrace();
     }
-    */
     try {
       SimpleNode n = t.Start();
       n.dump("");
@@ -34,8 +33,7 @@ public class Grammar2/*@bgen(jjtree)*/implements Grammar2TreeConstants, Grammar2
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
     try {
-      CORPS_METH();
-      jj_consume_token(13);
+      ALGORITHME();
     jjtree.closeNodeScope(jjtn000, true);
     jjtc000 = false;
     {if (true) return jjtn000;}
@@ -70,13 +68,22 @@ public class Grammar2/*@bgen(jjtree)*/implements Grammar2TreeConstants, Grammar2
     try {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
       case NOMBRE_NN:
+      case 13:
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case 13:
+          jj_consume_token(13);
+          break;
+        default:
+          jj_la1[0] = jj_gen;
+          ;
+        }
         jj_consume_token(NOMBRE_NN);
         break;
       case ZERO:
         jj_consume_token(ZERO);
         break;
       default:
-        jj_la1[0] = jj_gen;
+        jj_la1[1] = jj_gen;
         jj_consume_token(-1);
         throw new ParseException();
       }
@@ -95,44 +102,68 @@ public class Grammar2/*@bgen(jjtree)*/implements Grammar2TreeConstants, Grammar2
   jjtree.openNodeScope(jjtn000);
     try {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-      case NOM:
-        DECL_VAR();
+      case CR:
+        jj_consume_token(CR);
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case NOM:
+        case CR:
+        case 21:
+          CORPS_VAR();
+          break;
+        default:
+          jj_la1[2] = jj_gen;
+          ;
+        }
         break;
+      case NOM:
       case 21:
-        DECL_CONST();
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case NOM:
+          DECL_VAR();
+          break;
+        case 21:
+          DECL_CONST();
+          break;
+        default:
+          jj_la1[3] = jj_gen;
+          jj_consume_token(-1);
+          throw new ParseException();
+        }
+        jj_consume_token(CR);
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case NOM:
+        case CR:
+        case 21:
+          CORPS_VAR();
+          break;
+        default:
+          jj_la1[4] = jj_gen;
+          ;
+        }
         break;
       default:
-        jj_la1[1] = jj_gen;
+        jj_la1[5] = jj_gen;
         jj_consume_token(-1);
         throw new ParseException();
       }
-      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-      case NOM:
-      case 21:
-        CORPS_VAR();
-        break;
-      default:
-        jj_la1[2] = jj_gen;
-        ;
-      }
     } catch (Throwable jjte000) {
-      if (jjtc000) {
-        jjtree.clearNodeScope(jjtn000);
-        jjtc000 = false;
-      } else {
-        jjtree.popNode();
-      }
-      if (jjte000 instanceof RuntimeException) {
-        {if (true) throw (RuntimeException)jjte000;}
-      }
-      if (jjte000 instanceof ParseException) {
-        {if (true) throw (ParseException)jjte000;}
-      }
-      {if (true) throw (Error)jjte000;}
+    if (jjtc000) {
+      jjtree.clearNodeScope(jjtn000);
+      jjtc000 = false;
+    } else {
+      jjtree.popNode();
+    }
+    if (jjte000 instanceof RuntimeException) {
+      {if (true) throw (RuntimeException)jjte000;}
+    }
+    if (jjte000 instanceof ParseException) {
+      {if (true) throw (ParseException)jjte000;}
+    }
+    {if (true) throw (Error)jjte000;}
     } finally {
-      if (jjtc000) {
-        jjtree.closeNodeScope(jjtn000, true);
-      }
+    if (jjtc000) {
+      jjtree.closeNodeScope(jjtn000, true);
+    }
     }
   }
 
@@ -156,7 +187,7 @@ public class Grammar2/*@bgen(jjtree)*/implements Grammar2TreeConstants, Grammar2
         jj_consume_token(17);
         break;
       default:
-        jj_la1[3] = jj_gen;
+        jj_la1[6] = jj_gen;
         jj_consume_token(-1);
         throw new ParseException();
       }
@@ -195,7 +226,7 @@ public class Grammar2/*@bgen(jjtree)*/implements Grammar2TreeConstants, Grammar2
         TABLEAU();
         break;
       default:
-        jj_la1[4] = jj_gen;
+        jj_la1[7] = jj_gen;
         ;
       }
     } catch (Throwable jjte000) {
@@ -226,9 +257,23 @@ public class Grammar2/*@bgen(jjtree)*/implements Grammar2TreeConstants, Grammar2
   jjtree.openNodeScope(jjtn000);
     try {
       NOM_VAR();
-      jj_consume_token(ESPACE);
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case ESPACE:
+        jj_consume_token(ESPACE);
+        break;
+      default:
+        jj_la1[8] = jj_gen;
+        ;
+      }
       jj_consume_token(20);
-      jj_consume_token(ESPACE);
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case ESPACE:
+        jj_consume_token(ESPACE);
+        break;
+      default:
+        jj_la1[9] = jj_gen;
+        ;
+      }
       TYPE_VAR();
     } catch (Throwable jjte000) {
       if (jjtc000) {
@@ -289,6 +334,14 @@ public class Grammar2/*@bgen(jjtree)*/implements Grammar2TreeConstants, Grammar2
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
     try {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case ESPACE:
+        jj_consume_token(ESPACE);
+        break;
+      default:
+        jj_la1[10] = jj_gen;
+        ;
+      }
       if (jj_2_1(999999999)) {
         CALCUL_BOOLEEN();
       } else {
@@ -297,6 +350,7 @@ public class Grammar2/*@bgen(jjtree)*/implements Grammar2TreeConstants, Grammar2
         case ZERO:
         case REEL:
         case NOM:
+        case 13:
         case 27:
           CALCUL();
           break;
@@ -304,7 +358,7 @@ public class Grammar2/*@bgen(jjtree)*/implements Grammar2TreeConstants, Grammar2
           jj_consume_token(TEXTE);
           break;
         default:
-          jj_la1[5] = jj_gen;
+          jj_la1[11] = jj_gen;
           jj_consume_token(-1);
           throw new ParseException();
         }
@@ -368,34 +422,79 @@ public class Grammar2/*@bgen(jjtree)*/implements Grammar2TreeConstants, Grammar2
   jjtree.openNodeScope(jjtn000);
     try {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-      case 25:
-        DECL_FONC();
+      case CR:
         jj_consume_token(CR);
         switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-        case ESPACE:
-          CODE();
+        case CR:
+        case 25:
+        case 26:
+          CORPS_METH();
           break;
         default:
-          jj_la1[6] = jj_gen;
+          jj_la1[12] = jj_gen;
           ;
         }
-        jj_consume_token(22);
-        jj_consume_token(ESPACE);
-        CONTENU_VAR();
-        jj_consume_token(CR);
-        jj_consume_token(23);
-        jj_consume_token(CR);
         break;
+      case 25:
       case 26:
-        DECL_PROC();
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case 25:
+          DECL_FONC();
+          jj_consume_token(CR);
+          switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+          case NOM:
+          case CR:
+          case 37:
+          case 40:
+          case 43:
+            CODE();
+            break;
+          default:
+            jj_la1[13] = jj_gen;
+            ;
+          }
+          jj_consume_token(22);
+          jj_consume_token(ESPACE);
+          CONTENU_VAR();
+          label_1:
+          while (true) {
+            jj_consume_token(CR);
+            switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+            case CR:
+              ;
+              break;
+            default:
+              jj_la1[14] = jj_gen;
+              break label_1;
+            }
+          }
+          jj_consume_token(23);
+          break;
+        case 26:
+          DECL_PROC();
+          jj_consume_token(CR);
+          CODE();
+          jj_consume_token(24);
+          break;
+        default:
+          jj_la1[15] = jj_gen;
+          jj_consume_token(-1);
+          throw new ParseException();
+        }
         jj_consume_token(CR);
-        CODE();
-        jj_consume_token(CR);
-        jj_consume_token(24);
-        jj_consume_token(CR);
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case CR:
+        case 25:
+        case 26:
+          CORPS_METH();
+          break;
+        default:
+          jj_la1[16] = jj_gen;
+          ;
+        }
         break;
       default:
-        jj_la1[7] = jj_gen;
+        jj_la1[17] = jj_gen;
         jj_consume_token(-1);
         throw new ParseException();
       }
@@ -427,6 +526,7 @@ public class Grammar2/*@bgen(jjtree)*/implements Grammar2TreeConstants, Grammar2
   jjtree.openNodeScope(jjtn000);
     try {
       jj_consume_token(25);
+      jj_consume_token(ESPACE);
       TYPE_VAR();
       jj_consume_token(ESPACE);
       DECL_METH();
@@ -458,6 +558,7 @@ public class Grammar2/*@bgen(jjtree)*/implements Grammar2TreeConstants, Grammar2
   jjtree.openNodeScope(jjtn000);
     try {
       jj_consume_token(26);
+      jj_consume_token(ESPACE);
       DECL_METH();
     } catch (Throwable jjte000) {
       if (jjtc000) {
@@ -489,11 +590,12 @@ public class Grammar2/*@bgen(jjtree)*/implements Grammar2TreeConstants, Grammar2
       jj_consume_token(NOM);
       jj_consume_token(27);
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case ESPACE:
       case NOM:
         DECL_PARAMS();
         break;
       default:
-        jj_la1[8] = jj_gen;
+        jj_la1[18] = jj_gen;
         ;
       }
       jj_consume_token(28);
@@ -524,16 +626,48 @@ public class Grammar2/*@bgen(jjtree)*/implements Grammar2TreeConstants, Grammar2
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
     try {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case ESPACE:
+        jj_consume_token(ESPACE);
+        break;
+      default:
+        jj_la1[19] = jj_gen;
+        ;
+      }
       jj_consume_token(NOM);
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case ESPACE:
+        jj_consume_token(ESPACE);
+        break;
+      default:
+        jj_la1[20] = jj_gen;
+        ;
+      }
       jj_consume_token(20);
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case ESPACE:
+        jj_consume_token(ESPACE);
+        break;
+      default:
+        jj_la1[21] = jj_gen;
+        ;
+      }
       TYPE_VAR();
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case ESPACE:
+        jj_consume_token(ESPACE);
+        break;
+      default:
+        jj_la1[22] = jj_gen;
+        ;
+      }
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
       case 29:
         jj_consume_token(29);
         DECL_PARAMS();
         break;
       default:
-        jj_la1[9] = jj_gen;
+        jj_la1[23] = jj_gen;
         ;
       }
     } catch (Throwable jjte000) {
@@ -597,15 +731,17 @@ public class Grammar2/*@bgen(jjtree)*/implements Grammar2TreeConstants, Grammar2
       case NOMBRE_NN:
       case ZERO:
       case REEL:
+      case ESPACE:
       case NOM:
       case TEXTE:
       case BOOLEEN:
+      case 13:
       case 27:
-      case 35:
+      case 34:
         PARAM_VAL();
         break;
       default:
-        jj_la1[10] = jj_gen;
+        jj_la1[24] = jj_gen;
         ;
       }
       jj_consume_token(28);
@@ -638,12 +774,20 @@ public class Grammar2/*@bgen(jjtree)*/implements Grammar2TreeConstants, Grammar2
     try {
       CONTENU_VAR();
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case ESPACE:
+        jj_consume_token(ESPACE);
+        break;
+      default:
+        jj_la1[25] = jj_gen;
+        ;
+      }
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
       case 29:
         jj_consume_token(29);
         PARAM_VAL();
         break;
       default:
-        jj_la1[11] = jj_gen;
+        jj_la1[26] = jj_gen;
         ;
       }
     } catch (Throwable jjte000) {
@@ -681,7 +825,7 @@ public class Grammar2/*@bgen(jjtree)*/implements Grammar2TreeConstants, Grammar2
           NOM_VAR();
           break;
         default:
-          jj_la1[12] = jj_gen;
+          jj_la1[27] = jj_gen;
           jj_consume_token(-1);
           throw new ParseException();
         }
@@ -717,7 +861,23 @@ public class Grammar2/*@bgen(jjtree)*/implements Grammar2TreeConstants, Grammar2
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
       case 27:
         jj_consume_token(27);
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case ESPACE:
+          jj_consume_token(ESPACE);
+          break;
+        default:
+          jj_la1[28] = jj_gen;
+          ;
+        }
         CALCUL();
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case ESPACE:
+          jj_consume_token(ESPACE);
+          break;
+        default:
+          jj_la1[29] = jj_gen;
+          ;
+        }
         jj_consume_token(28);
         break;
       case NOM:
@@ -725,34 +885,35 @@ public class Grammar2/*@bgen(jjtree)*/implements Grammar2TreeConstants, Grammar2
         break;
       case NOMBRE_NN:
       case ZERO:
+      case 13:
         ENTIER();
         break;
       case REEL:
         jj_consume_token(REEL);
         break;
       default:
-        jj_la1[13] = jj_gen;
+        jj_la1[30] = jj_gen;
         jj_consume_token(-1);
         throw new ParseException();
       }
     } catch (Throwable jjte000) {
-      if (jjtc000) {
-        jjtree.clearNodeScope(jjtn000);
-        jjtc000 = false;
-      } else {
-        jjtree.popNode();
-      }
-      if (jjte000 instanceof RuntimeException) {
-        {if (true) throw (RuntimeException)jjte000;}
-      }
-      if (jjte000 instanceof ParseException) {
-        {if (true) throw (ParseException)jjte000;}
-      }
-      {if (true) throw (Error)jjte000;}
+    if (jjtc000) {
+      jjtree.clearNodeScope(jjtn000);
+      jjtc000 = false;
+    } else {
+      jjtree.popNode();
+    }
+    if (jjte000 instanceof RuntimeException) {
+      {if (true) throw (RuntimeException)jjte000;}
+    }
+    if (jjte000 instanceof ParseException) {
+      {if (true) throw (ParseException)jjte000;}
+    }
+    {if (true) throw (Error)jjte000;}
     } finally {
-      if (jjtc000) {
-        jjtree.closeNodeScope(jjtn000, true);
-      }
+    if (jjtc000) {
+      jjtree.closeNodeScope(jjtn000, true);
+    }
     }
   }
 
@@ -763,28 +924,40 @@ public class Grammar2/*@bgen(jjtree)*/implements Grammar2TreeConstants, Grammar2
   jjtree.openNodeScope(jjtn000);
     try {
       MULTIPLICATION();
-      label_1:
+      label_2:
       while (true) {
-        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-        case 30:
-        case 31:
+        if (jj_2_3(2)) {
           ;
+        } else {
+          break label_2;
+        }
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case ESPACE:
+          jj_consume_token(ESPACE);
           break;
         default:
-          jj_la1[14] = jj_gen;
-          break label_1;
+          jj_la1[31] = jj_gen;
+          ;
         }
         switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
         case 30:
           jj_consume_token(30);
           break;
-        case 31:
-          jj_consume_token(31);
+        case 13:
+          jj_consume_token(13);
           break;
         default:
-          jj_la1[15] = jj_gen;
+          jj_la1[32] = jj_gen;
           jj_consume_token(-1);
           throw new ParseException();
+        }
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case ESPACE:
+          jj_consume_token(ESPACE);
+          break;
+        default:
+          jj_la1[33] = jj_gen;
+          ;
         }
         MULTIPLICATION();
       }
@@ -816,32 +989,43 @@ public class Grammar2/*@bgen(jjtree)*/implements Grammar2TreeConstants, Grammar2
   jjtree.openNodeScope(jjtn000);
     try {
       EXPRESSION_UNAIRE();
-      label_2:
+      label_3:
       while (true) {
-        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-        case 32:
-        case 33:
-        case 34:
+        if (jj_2_4(2)) {
           ;
-          break;
-        default:
-          jj_la1[16] = jj_gen;
-          break label_2;
+        } else {
+          break label_3;
         }
         switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case ESPACE:
+          jj_consume_token(ESPACE);
+          break;
+        default:
+          jj_la1[34] = jj_gen;
+          ;
+        }
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case 31:
+          jj_consume_token(31);
+          break;
         case 32:
           jj_consume_token(32);
           break;
         case 33:
           jj_consume_token(33);
           break;
-        case 34:
-          jj_consume_token(34);
-          break;
         default:
-          jj_la1[17] = jj_gen;
+          jj_la1[35] = jj_gen;
           jj_consume_token(-1);
           throw new ParseException();
+        }
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case ESPACE:
+          jj_consume_token(ESPACE);
+          break;
+        default:
+          jj_la1[36] = jj_gen;
+          ;
         }
         EXPRESSION_UNAIRE();
       }
@@ -874,16 +1058,33 @@ public class Grammar2/*@bgen(jjtree)*/implements Grammar2TreeConstants, Grammar2
   jjtree.openNodeScope(jjtn000);
     try {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-      case 35:
-        jj_consume_token(35);
+      case 34:
+        jj_consume_token(34);
+        jj_consume_token(ESPACE);
         break;
       default:
-        jj_la1[18] = jj_gen;
+        jj_la1[37] = jj_gen;
         ;
       }
-      if (jj_2_3(3)) {
+      if (jj_2_5(3)) {
         jj_consume_token(27);
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case ESPACE:
+          jj_consume_token(ESPACE);
+          break;
+        default:
+          jj_la1[38] = jj_gen;
+          ;
+        }
         CALCUL_BOOLEEN();
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case ESPACE:
+          jj_consume_token(ESPACE);
+          break;
+        default:
+          jj_la1[39] = jj_gen;
+          ;
+        }
         jj_consume_token(28);
       } else {
         switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -891,10 +1092,10 @@ public class Grammar2/*@bgen(jjtree)*/implements Grammar2TreeConstants, Grammar2
           jj_consume_token(BOOLEEN);
           break;
         default:
-          jj_la1[19] = jj_gen;
-          if (jj_2_4(3)) {
+          jj_la1[40] = jj_gen;
+          if (jj_2_6(3)) {
             APPEL();
-          } else if (jj_2_5(2)) {
+          } else if (jj_2_7(2)) {
             COMP_ARITH();
           } else {
             jj_consume_token(-1);
@@ -930,17 +1131,16 @@ public class Grammar2/*@bgen(jjtree)*/implements Grammar2TreeConstants, Grammar2
   jjtree.openNodeScope(jjtn000);
     try {
       EXPRESSION_ET();
-      label_3:
+      label_4:
       while (true) {
-        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-        case 36:
+        if (jj_2_8(2)) {
           ;
-          break;
-        default:
-          jj_la1[20] = jj_gen;
-          break label_3;
+        } else {
+          break label_4;
         }
-        jj_consume_token(36);
+        jj_consume_token(ESPACE);
+        jj_consume_token(35);
+        jj_consume_token(ESPACE);
         EXPRESSION_ET();
       }
     } catch (Throwable jjte000) {
@@ -971,17 +1171,16 @@ public class Grammar2/*@bgen(jjtree)*/implements Grammar2TreeConstants, Grammar2
   jjtree.openNodeScope(jjtn000);
     try {
       COMPARAISON();
-      label_4:
+      label_5:
       while (true) {
-        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-        case 37:
+        if (jj_2_9(2)) {
           ;
-          break;
-        default:
-          jj_la1[21] = jj_gen;
-          break label_4;
+        } else {
+          break label_5;
         }
-        jj_consume_token(37);
+        jj_consume_token(ESPACE);
+        jj_consume_token(36);
+        jj_consume_token(ESPACE);
         COMPARAISON();
       }
     } catch (Throwable jjte000) {
@@ -1042,6 +1241,14 @@ public class Grammar2/*@bgen(jjtree)*/implements Grammar2TreeConstants, Grammar2
     try {
       EXPRESSION_UNAIRE();
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case ESPACE:
+        jj_consume_token(ESPACE);
+        break;
+      default:
+        jj_la1[41] = jj_gen;
+        ;
+      }
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
       case 47:
       case 48:
       case 49:
@@ -1053,9 +1260,17 @@ public class Grammar2/*@bgen(jjtree)*/implements Grammar2TreeConstants, Grammar2
         OPERATEUR_EGAL();
         break;
       default:
-        jj_la1[22] = jj_gen;
+        jj_la1[42] = jj_gen;
         jj_consume_token(-1);
         throw new ParseException();
+      }
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case ESPACE:
+        jj_consume_token(ESPACE);
+        break;
+      default:
+        jj_la1[43] = jj_gen;
+        ;
       }
       EXPRESSION_UNAIRE();
     } catch (Throwable jjte000) {
@@ -1085,39 +1300,85 @@ public class Grammar2/*@bgen(jjtree)*/implements Grammar2TreeConstants, Grammar2
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
     try {
-      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-      case NOMBRE_NN:
-      case ZERO:
-      case REEL:
-      case NOM:
-      case BOOLEEN:
-      case 27:
-      case 35:
+      if (jj_2_11(2)) {
         EXPRESSION_UNAIRE_BOOL();
-        label_5:
+        label_6:
         while (true) {
-          switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-          case 45:
-          case 46:
+          if (jj_2_10(2)) {
             ;
+          } else {
+            break label_6;
+          }
+          switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+          case ESPACE:
+            jj_consume_token(ESPACE);
             break;
           default:
-            jj_la1[23] = jj_gen;
-            break label_5;
+            jj_la1[44] = jj_gen;
+            ;
           }
           OPERATEUR_EGAL();
+          switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+          case ESPACE:
+            jj_consume_token(ESPACE);
+            break;
+          default:
+            jj_la1[45] = jj_gen;
+            ;
+          }
           EXPRESSION_UNAIRE_BOOL();
         }
-        break;
-      case TEXTE:
-        jj_consume_token(TEXTE);
-        OPERATEUR_EGAL();
-        jj_consume_token(TEXTE);
-        break;
-      default:
-        jj_la1[24] = jj_gen;
-        jj_consume_token(-1);
-        throw new ParseException();
+      } else {
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case NOM:
+        case TEXTE:
+          switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+          case TEXTE:
+            jj_consume_token(TEXTE);
+            break;
+          case NOM:
+            APPEL();
+            break;
+          default:
+            jj_la1[46] = jj_gen;
+            jj_consume_token(-1);
+            throw new ParseException();
+          }
+          switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+          case ESPACE:
+            jj_consume_token(ESPACE);
+            break;
+          default:
+            jj_la1[47] = jj_gen;
+            ;
+          }
+          OPERATEUR_EGAL();
+          switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+          case ESPACE:
+            jj_consume_token(ESPACE);
+            break;
+          default:
+            jj_la1[48] = jj_gen;
+            ;
+          }
+          switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+          case TEXTE:
+            jj_consume_token(TEXTE);
+            break;
+          case NOM:
+            APPEL();
+            break;
+          default:
+            jj_la1[49] = jj_gen;
+            jj_consume_token(-1);
+            throw new ParseException();
+          }
+          break;
+        default:
+          jj_la1[50] = jj_gen;
+          jj_consume_token(-1);
+          throw new ParseException();
+        }
       }
     } catch (Throwable jjte000) {
     if (jjtc000) {
@@ -1147,39 +1408,68 @@ public class Grammar2/*@bgen(jjtree)*/implements Grammar2TreeConstants, Grammar2
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
     try {
-      jj_consume_token(ESPACE);
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-      case 38:
-        SI();
+      case CR:
+        jj_consume_token(CR);
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case NOM:
+        case CR:
+        case 37:
+        case 40:
+        case 43:
+          CODE();
+          break;
+        default:
+          jj_la1[51] = jj_gen;
+          ;
+        }
         break;
-      case 41:
+      case NOM:
+      case 37:
+      case 40:
       case 43:
-        BOUCLE();
-        break;
-      default:
-        jj_la1[25] = jj_gen;
-        if (jj_2_6(5)) {
-          INST_VAR();
-        } else {
-          switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-          case NOM:
-            APPEL();
-            break;
-          default:
-            jj_la1[26] = jj_gen;
-            jj_consume_token(-1);
-            throw new ParseException();
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case 37:
+          SI();
+          break;
+        case 40:
+        case 43:
+          BOUCLE();
+          break;
+        default:
+          jj_la1[52] = jj_gen;
+          if (jj_2_12(5)) {
+            INST_VAR();
+          } else {
+            switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+            case NOM:
+              APPEL();
+              break;
+            default:
+              jj_la1[53] = jj_gen;
+              jj_consume_token(-1);
+              throw new ParseException();
+            }
           }
         }
-      }
-      jj_consume_token(ESPACE);
-      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-      case ESPACE:
-        CODE();
+        jj_consume_token(CR);
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case NOM:
+        case CR:
+        case 37:
+        case 40:
+        case 43:
+          CODE();
+          break;
+        default:
+          jj_la1[54] = jj_gen;
+          ;
+        }
         break;
       default:
-        jj_la1[27] = jj_gen;
-        ;
+        jj_la1[55] = jj_gen;
+        jj_consume_token(-1);
+        throw new ParseException();
       }
     } catch (Throwable jjte000) {
     if (jjtc000) {
@@ -1209,19 +1499,22 @@ public class Grammar2/*@bgen(jjtree)*/implements Grammar2TreeConstants, Grammar2
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
     try {
-      jj_consume_token(38);
+      jj_consume_token(37);
+      jj_consume_token(ESPACE);
       CALCUL_BOOLEEN();
+      jj_consume_token(CR);
       CODE();
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-      case 39:
-        jj_consume_token(39);
+      case 38:
+        jj_consume_token(38);
+        jj_consume_token(CR);
         CODE();
         break;
       default:
-        jj_la1[28] = jj_gen;
+        jj_la1[56] = jj_gen;
         ;
       }
-      jj_consume_token(40);
+      jj_consume_token(39);
     } catch (Throwable jjte000) {
     if (jjtc000) {
       jjtree.clearNodeScope(jjtn000);
@@ -1251,14 +1544,14 @@ public class Grammar2/*@bgen(jjtree)*/implements Grammar2TreeConstants, Grammar2
   jjtree.openNodeScope(jjtn000);
     try {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-      case 41:
+      case 40:
         POUR();
         break;
       case 43:
         TANTQUE();
         break;
       default:
-        jj_la1[29] = jj_gen;
+        jj_la1[57] = jj_gen;
         jj_consume_token(-1);
         throw new ParseException();
       }
@@ -1289,12 +1582,46 @@ public class Grammar2/*@bgen(jjtree)*/implements Grammar2TreeConstants, Grammar2
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
     try {
+      jj_consume_token(40);
+      jj_consume_token(ESPACE);
+      INST_VAR();
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case ESPACE:
+        jj_consume_token(ESPACE);
+        break;
+      default:
+        jj_la1[58] = jj_gen;
+        ;
+      }
       jj_consume_token(41);
-      INST_VAR();
-      jj_consume_token(13);
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case ESPACE:
+        jj_consume_token(ESPACE);
+        break;
+      default:
+        jj_la1[59] = jj_gen;
+        ;
+      }
       CALCUL_BOOLEEN();
-      jj_consume_token(13);
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case ESPACE:
+        jj_consume_token(ESPACE);
+        break;
+      default:
+        jj_la1[60] = jj_gen;
+        ;
+      }
+      jj_consume_token(41);
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case ESPACE:
+        jj_consume_token(ESPACE);
+        break;
+      default:
+        jj_la1[61] = jj_gen;
+        ;
+      }
       INST_VAR();
+      jj_consume_token(CR);
       CODE();
       jj_consume_token(42);
     } catch (Throwable jjte000) {
@@ -1325,7 +1652,9 @@ public class Grammar2/*@bgen(jjtree)*/implements Grammar2TreeConstants, Grammar2
   jjtree.openNodeScope(jjtn000);
     try {
       jj_consume_token(43);
+      jj_consume_token(ESPACE);
       CALCUL_BOOLEEN();
+      jj_consume_token(CR);
       CODE();
       jj_consume_token(44);
     } catch (Throwable jjte000) {
@@ -1364,7 +1693,7 @@ public class Grammar2/*@bgen(jjtree)*/implements Grammar2TreeConstants, Grammar2
         jj_consume_token(46);
         break;
       default:
-        jj_la1[30] = jj_gen;
+        jj_la1[62] = jj_gen;
         jj_consume_token(-1);
         throw new ParseException();
       }
@@ -1395,7 +1724,7 @@ public class Grammar2/*@bgen(jjtree)*/implements Grammar2TreeConstants, Grammar2
         jj_consume_token(50);
         break;
       default:
-        jj_la1[31] = jj_gen;
+        jj_la1[63] = jj_gen;
         jj_consume_token(-1);
         throw new ParseException();
       }
@@ -1414,26 +1743,27 @@ public class Grammar2/*@bgen(jjtree)*/implements Grammar2TreeConstants, Grammar2
   jjtree.openNodeScope(jjtn000);
     try {
       jj_consume_token(51);
+      jj_consume_token(CR);
       CORPS_VAR();
       jj_consume_token(52);
     } catch (Throwable jjte000) {
-      if (jjtc000) {
-        jjtree.clearNodeScope(jjtn000);
-        jjtc000 = false;
-      } else {
-        jjtree.popNode();
-      }
-      if (jjte000 instanceof RuntimeException) {
-        {if (true) throw (RuntimeException)jjte000;}
-      }
-      if (jjte000 instanceof ParseException) {
-        {if (true) throw (ParseException)jjte000;}
-      }
-      {if (true) throw (Error)jjte000;}
+    if (jjtc000) {
+      jjtree.clearNodeScope(jjtn000);
+      jjtc000 = false;
+    } else {
+      jjtree.popNode();
+    }
+    if (jjte000 instanceof RuntimeException) {
+      {if (true) throw (RuntimeException)jjte000;}
+    }
+    if (jjte000 instanceof ParseException) {
+      {if (true) throw (ParseException)jjte000;}
+    }
+    {if (true) throw (Error)jjte000;}
     } finally {
-      if (jjtc000) {
-        jjtree.closeNodeScope(jjtn000, true);
-      }
+    if (jjtc000) {
+      jjtree.closeNodeScope(jjtn000, true);
+    }
     }
   }
 
@@ -1444,19 +1774,8 @@ public class Grammar2/*@bgen(jjtree)*/implements Grammar2TreeConstants, Grammar2
   jjtree.openNodeScope(jjtn000);
     try {
       jj_consume_token(53);
-      label_6:
-      while (true) {
-        CORPS_METH();
-        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-        case 25:
-        case 26:
-          ;
-          break;
-        default:
-          jj_la1[32] = jj_gen;
-          break label_6;
-        }
-      }
+      jj_consume_token(CR);
+      CORPS_METH();
       jj_consume_token(54);
     } catch (Throwable jjte000) {
     if (jjtc000) {
@@ -1486,6 +1805,7 @@ public class Grammar2/*@bgen(jjtree)*/implements Grammar2TreeConstants, Grammar2
   jjtree.openNodeScope(jjtn000);
     try {
       jj_consume_token(55);
+      jj_consume_token(CR);
       CODE();
       jj_consume_token(56);
     } catch (Throwable jjte000) {
@@ -1516,10 +1836,59 @@ public class Grammar2/*@bgen(jjtree)*/implements Grammar2TreeConstants, Grammar2
   jjtree.openNodeScope(jjtn000);
     try {
       jj_consume_token(57);
+      jj_consume_token(ESPACE);
       jj_consume_token(NOM);
+      label_7:
+      while (true) {
+        jj_consume_token(CR);
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case CR:
+          ;
+          break;
+        default:
+          jj_la1[64] = jj_gen;
+          break label_7;
+        }
+      }
       BLOC_VAR();
+      label_8:
+      while (true) {
+        jj_consume_token(CR);
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case CR:
+          ;
+          break;
+        default:
+          jj_la1[65] = jj_gen;
+          break label_8;
+        }
+      }
       BLOC_METH();
+      label_9:
+      while (true) {
+        jj_consume_token(CR);
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case CR:
+          ;
+          break;
+        default:
+          jj_la1[66] = jj_gen;
+          break label_9;
+        }
+      }
       MAIN();
+      label_10:
+      while (true) {
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case CR:
+          ;
+          break;
+        default:
+          jj_la1[67] = jj_gen;
+          break label_10;
+        }
+        jj_consume_token(CR);
+      }
     } catch (Throwable jjte000) {
     if (jjtc000) {
       jjtree.clearNodeScope(jjtn000);
@@ -1583,60 +1952,94 @@ public class Grammar2/*@bgen(jjtree)*/implements Grammar2TreeConstants, Grammar2
     finally { jj_save(5, xla); }
   }
 
-  static private boolean jj_3R_37() {
-    if (jj_3R_16()) return true;
-    Token xsp;
-    while (true) {
-      xsp = jj_scanpos;
-      if (jj_3R_42()) { jj_scanpos = xsp; break; }
-    }
-    return false;
+  static private boolean jj_2_7(int xla) {
+    jj_la = xla; jj_lastpos = jj_scanpos = token;
+    try { return !jj_3_7(); }
+    catch(LookaheadSuccess ls) { return true; }
+    finally { jj_save(6, xla); }
   }
 
-  static private boolean jj_3R_19() {
-    if (jj_scan_token(NOM)) return true;
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3R_28()) jj_scanpos = xsp;
-    return false;
+  static private boolean jj_2_8(int xla) {
+    jj_la = xla; jj_lastpos = jj_scanpos = token;
+    try { return !jj_3_8(); }
+    catch(LookaheadSuccess ls) { return true; }
+    finally { jj_save(7, xla); }
   }
 
-  static private boolean jj_3_5() {
-    if (jj_3R_10()) return true;
-    return false;
+  static private boolean jj_2_9(int xla) {
+    jj_la = xla; jj_lastpos = jj_scanpos = token;
+    try { return !jj_3_9(); }
+    catch(LookaheadSuccess ls) { return true; }
+    finally { jj_save(8, xla); }
   }
 
-  static private boolean jj_3R_31() {
-    if (jj_3R_37()) return true;
-    Token xsp;
-    while (true) {
-      xsp = jj_scanpos;
-      if (jj_3R_38()) { jj_scanpos = xsp; break; }
-    }
-    return false;
+  static private boolean jj_2_10(int xla) {
+    jj_la = xla; jj_lastpos = jj_scanpos = token;
+    try { return !jj_3_10(); }
+    catch(LookaheadSuccess ls) { return true; }
+    finally { jj_save(9, xla); }
   }
 
-  static private boolean jj_3R_33() {
-    if (jj_scan_token(18)) return true;
-    if (jj_scan_token(NOMBRE_NN)) return true;
-    if (jj_scan_token(19)) return true;
-    return false;
+  static private boolean jj_2_11(int xla) {
+    jj_la = xla; jj_lastpos = jj_scanpos = token;
+    try { return !jj_3_11(); }
+    catch(LookaheadSuccess ls) { return true; }
+    finally { jj_save(10, xla); }
   }
 
-  static private boolean jj_3R_43() {
+  static private boolean jj_2_12(int xla) {
+    jj_la = xla; jj_lastpos = jj_scanpos = token;
+    try { return !jj_3_12(); }
+    catch(LookaheadSuccess ls) { return true; }
+    finally { jj_save(11, xla); }
+  }
+
+  static private boolean jj_3R_45() {
     if (jj_scan_token(29)) return true;
-    if (jj_3R_41()) return true;
+    if (jj_3R_44()) return true;
     return false;
   }
 
-  static private boolean jj_3R_16() {
+  static private boolean jj_3R_13() {
+    if (jj_3R_14()) return true;
+    Token xsp;
+    while (true) {
+      xsp = jj_scanpos;
+      if (jj_3_4()) { jj_scanpos = xsp; break; }
+    }
+    return false;
+  }
+
+  static private boolean jj_3R_38() {
+    if (jj_3R_13()) return true;
+    Token xsp;
+    while (true) {
+      xsp = jj_scanpos;
+      if (jj_3_3()) { jj_scanpos = xsp; break; }
+    }
+    return false;
+  }
+
+  static private boolean jj_3R_22() {
+    if (jj_scan_token(27)) return true;
     Token xsp;
     xsp = jj_scanpos;
+    if (jj_scan_token(7)) jj_scanpos = xsp;
+    if (jj_3R_38()) return true;
+    xsp = jj_scanpos;
+    if (jj_scan_token(7)) jj_scanpos = xsp;
+    if (jj_scan_token(28)) return true;
+    return false;
+  }
+
+  static private boolean jj_3R_14() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_22()) {
+    jj_scanpos = xsp;
     if (jj_3R_23()) {
     jj_scanpos = xsp;
     if (jj_3R_24()) {
-    jj_scanpos = xsp;
-    if (jj_3R_25()) {
     jj_scanpos = xsp;
     if (jj_scan_token(6)) return true;
     }
@@ -1645,14 +2048,119 @@ public class Grammar2/*@bgen(jjtree)*/implements Grammar2TreeConstants, Grammar2
     return false;
   }
 
-  static private boolean jj_3R_23() {
+  static private boolean jj_3_2() {
+    if (jj_3R_12()) return true;
+    return false;
+  }
+
+  static private boolean jj_3R_15() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3_2()) {
+    jj_scanpos = xsp;
+    if (jj_3R_25()) return true;
+    }
+    return false;
+  }
+
+  static private boolean jj_3R_41() {
+    if (jj_3R_44()) return true;
+    return false;
+  }
+
+  static private boolean jj_3R_44() {
+    if (jj_3R_30()) return true;
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_scan_token(7)) jj_scanpos = xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_45()) jj_scanpos = xsp;
+    return false;
+  }
+
+  static private boolean jj_3R_35() {
+    if (jj_3R_38()) return true;
+    return false;
+  }
+
+  static private boolean jj_3R_21() {
     if (jj_scan_token(27)) return true;
-    if (jj_3R_31()) return true;
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_41()) jj_scanpos = xsp;
     if (jj_scan_token(28)) return true;
     return false;
   }
 
-  static private boolean jj_3R_26() {
+  static private boolean jj_3R_12() {
+    if (jj_scan_token(NOM)) return true;
+    if (jj_3R_21()) return true;
+    return false;
+  }
+
+  static private boolean jj_3_1() {
+    if (jj_3R_11()) return true;
+    return false;
+  }
+
+  static private boolean jj_3_7() {
+    if (jj_3R_16()) return true;
+    return false;
+  }
+
+  static private boolean jj_3R_19() {
+    if (jj_3R_29()) return true;
+    if (jj_scan_token(ASSIGNATION)) return true;
+    if (jj_3R_30()) return true;
+    return false;
+  }
+
+  static private boolean jj_3R_30() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_scan_token(7)) jj_scanpos = xsp;
+    xsp = jj_scanpos;
+    if (jj_3_1()) {
+    jj_scanpos = xsp;
+    if (jj_3R_35()) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(10)) return true;
+    }
+    }
+    return false;
+  }
+
+  static private boolean jj_3R_43() {
+    if (jj_3R_15()) return true;
+    return false;
+  }
+
+  static private boolean jj_3R_34() {
+    if (jj_3R_39()) return true;
+    return false;
+  }
+
+  static private boolean jj_3_6() {
+    if (jj_3R_15()) return true;
+    return false;
+  }
+
+  static private boolean jj_3R_29() {
+    if (jj_scan_token(NOM)) return true;
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_34()) jj_scanpos = xsp;
+    return false;
+  }
+
+  static private boolean jj_3R_39() {
+    if (jj_scan_token(18)) return true;
+    if (jj_scan_token(NOMBRE_NN)) return true;
+    if (jj_scan_token(19)) return true;
+    return false;
+  }
+
+  static private boolean jj_3R_33() {
     Token xsp;
     xsp = jj_scanpos;
     if (jj_scan_token(47)) {
@@ -1669,6 +2177,11 @@ public class Grammar2/*@bgen(jjtree)*/implements Grammar2TreeConstants, Grammar2
   }
 
   static private boolean jj_3R_27() {
+    if (jj_3R_17()) return true;
+    return false;
+  }
+
+  static private boolean jj_3R_17() {
     Token xsp;
     xsp = jj_scanpos;
     if (jj_scan_token(45)) {
@@ -1678,255 +2191,225 @@ public class Grammar2/*@bgen(jjtree)*/implements Grammar2TreeConstants, Grammar2
     return false;
   }
 
-  static private boolean jj_3R_9() {
+  static private boolean jj_3R_37() {
     Token xsp;
     xsp = jj_scanpos;
-    if (jj_3_2()) {
-    jj_scanpos = xsp;
-    if (jj_3R_15()) return true;
-    }
-    return false;
-  }
-
-  static private boolean jj_3_2() {
-    if (jj_3R_8()) return true;
-    return false;
-  }
-
-  static private boolean jj_3R_18() {
-    if (jj_3R_27()) return true;
-    return false;
-  }
-
-  static private boolean jj_3R_41() {
-    if (jj_3R_20()) return true;
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3R_43()) jj_scanpos = xsp;
-    return false;
-  }
-
-  static private boolean jj_3R_36() {
-    if (jj_3R_41()) return true;
-    return false;
-  }
-
-  static private boolean jj_3_6() {
-    if (jj_3R_11()) return true;
-    return false;
-  }
-
-  static private boolean jj_3_4() {
-    if (jj_3R_9()) return true;
+    if (jj_scan_token(13)) jj_scanpos = xsp;
+    if (jj_scan_token(NOMBRE_NN)) return true;
     return false;
   }
 
   static private boolean jj_3R_32() {
     Token xsp;
     xsp = jj_scanpos;
-    if (jj_scan_token(4)) {
+    if (jj_3R_37()) {
     jj_scanpos = xsp;
     if (jj_scan_token(5)) return true;
     }
     return false;
   }
 
-  static private boolean jj_3R_14() {
-    if (jj_scan_token(27)) return true;
+  static private boolean jj_3_12() {
+    if (jj_3R_19()) return true;
+    return false;
+  }
+
+  static private boolean jj_3_10() {
     Token xsp;
     xsp = jj_scanpos;
-    if (jj_3R_36()) jj_scanpos = xsp;
-    if (jj_scan_token(28)) return true;
-    return false;
-  }
-
-  static private boolean jj_3R_40() {
-    if (jj_3R_27()) return true;
-    if (jj_3R_39()) return true;
-    return false;
-  }
-
-  static private boolean jj_3R_8() {
-    if (jj_scan_token(NOM)) return true;
-    if (jj_3R_14()) return true;
-    return false;
-  }
-
-  static private boolean jj_3R_29() {
-    if (jj_3R_31()) return true;
-    return false;
-  }
-
-  static private boolean jj_3R_17() {
-    if (jj_3R_26()) return true;
-    return false;
-  }
-
-  static private boolean jj_3R_35() {
-    if (jj_scan_token(TEXTE)) return true;
-    if (jj_3R_27()) return true;
-    if (jj_scan_token(TEXTE)) return true;
-    return false;
-  }
-
-  static private boolean jj_3R_30() {
-    Token xsp;
+    if (jj_scan_token(7)) jj_scanpos = xsp;
+    if (jj_3R_17()) return true;
     xsp = jj_scanpos;
-    if (jj_3R_34()) {
-    jj_scanpos = xsp;
-    if (jj_3R_35()) return true;
-    }
-    return false;
-  }
-
-  static private boolean jj_3R_34() {
-    if (jj_3R_39()) return true;
-    Token xsp;
-    while (true) {
-      xsp = jj_scanpos;
-      if (jj_3R_40()) { jj_scanpos = xsp; break; }
-    }
-    return false;
-  }
-
-  static private boolean jj_3R_22() {
-    if (jj_scan_token(37)) return true;
-    if (jj_3R_21()) return true;
-    return false;
-  }
-
-  static private boolean jj_3R_13() {
-    if (jj_scan_token(36)) return true;
-    if (jj_3R_12()) return true;
-    return false;
-  }
-
-  static private boolean jj_3R_10() {
-    if (jj_3R_16()) return true;
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3R_17()) {
-    jj_scanpos = xsp;
+    if (jj_scan_token(7)) jj_scanpos = xsp;
     if (jj_3R_18()) return true;
-    }
-    if (jj_3R_16()) return true;
     return false;
   }
 
-  static private boolean jj_3R_21() {
-    if (jj_3R_30()) return true;
+  static private boolean jj_3R_26() {
+    if (jj_3R_33()) return true;
     return false;
   }
 
   static private boolean jj_3R_42() {
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_scan_token(32)) {
-    jj_scanpos = xsp;
-    if (jj_scan_token(33)) {
-    jj_scanpos = xsp;
-    if (jj_scan_token(34)) return true;
-    }
-    }
-    if (jj_3R_16()) return true;
+    if (jj_3R_15()) return true;
     return false;
   }
 
-  static private boolean jj_3R_11() {
-    if (jj_3R_19()) return true;
-    if (jj_scan_token(ASSIGNATION)) return true;
-    if (jj_3R_20()) return true;
-    return false;
-  }
-
-  static private boolean jj_3R_25() {
+  static private boolean jj_3R_24() {
     if (jj_3R_32()) return true;
     return false;
   }
 
-  static private boolean jj_3R_12() {
-    if (jj_3R_21()) return true;
+  static private boolean jj_3R_40() {
     Token xsp;
-    while (true) {
-      xsp = jj_scanpos;
-      if (jj_3R_22()) { jj_scanpos = xsp; break; }
+    xsp = jj_scanpos;
+    if (jj_scan_token(10)) {
+    jj_scanpos = xsp;
+    if (jj_3R_42()) return true;
+    }
+    xsp = jj_scanpos;
+    if (jj_scan_token(7)) jj_scanpos = xsp;
+    if (jj_3R_17()) return true;
+    xsp = jj_scanpos;
+    if (jj_scan_token(7)) jj_scanpos = xsp;
+    xsp = jj_scanpos;
+    if (jj_scan_token(10)) {
+    jj_scanpos = xsp;
+    if (jj_3R_43()) return true;
     }
     return false;
   }
 
-  static private boolean jj_3_1() {
-    if (jj_3R_7()) return true;
+  static private boolean jj_3_11() {
+    if (jj_3R_18()) return true;
+    Token xsp;
+    while (true) {
+      xsp = jj_scanpos;
+      if (jj_3_10()) { jj_scanpos = xsp; break; }
+    }
+    return false;
+  }
+
+  static private boolean jj_3R_36() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3_11()) {
+    jj_scanpos = xsp;
+    if (jj_3R_40()) return true;
+    }
+    return false;
+  }
+
+  static private boolean jj_3_9() {
+    if (jj_scan_token(ESPACE)) return true;
+    if (jj_scan_token(36)) return true;
+    if (jj_scan_token(ESPACE)) return true;
+    if (jj_3R_31()) return true;
+    return false;
+  }
+
+  static private boolean jj_3R_23() {
+    if (jj_3R_15()) return true;
+    return false;
+  }
+
+  static private boolean jj_3R_16() {
+    if (jj_3R_14()) return true;
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_scan_token(7)) jj_scanpos = xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_26()) {
+    jj_scanpos = xsp;
+    if (jj_3R_27()) return true;
+    }
+    xsp = jj_scanpos;
+    if (jj_scan_token(7)) jj_scanpos = xsp;
+    if (jj_3R_14()) return true;
+    return false;
+  }
+
+  static private boolean jj_3_8() {
+    if (jj_scan_token(ESPACE)) return true;
+    if (jj_scan_token(35)) return true;
+    if (jj_scan_token(ESPACE)) return true;
+    if (jj_3R_20()) return true;
+    return false;
+  }
+
+  static private boolean jj_3_5() {
+    if (jj_scan_token(27)) return true;
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_scan_token(7)) jj_scanpos = xsp;
+    if (jj_3R_11()) return true;
+    xsp = jj_scanpos;
+    if (jj_scan_token(7)) jj_scanpos = xsp;
+    if (jj_scan_token(28)) return true;
+    return false;
+  }
+
+  static private boolean jj_3R_31() {
+    if (jj_3R_36()) return true;
+    return false;
+  }
+
+  static private boolean jj_3_4() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_scan_token(7)) jj_scanpos = xsp;
+    xsp = jj_scanpos;
+    if (jj_scan_token(31)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(32)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(33)) return true;
+    }
+    }
+    xsp = jj_scanpos;
+    if (jj_scan_token(7)) jj_scanpos = xsp;
+    if (jj_3R_14()) return true;
     return false;
   }
 
   static private boolean jj_3R_20() {
+    if (jj_3R_31()) return true;
     Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3_1()) {
-    jj_scanpos = xsp;
-    if (jj_3R_29()) {
-    jj_scanpos = xsp;
-    if (jj_scan_token(10)) return true;
-    }
+    while (true) {
+      xsp = jj_scanpos;
+      if (jj_3_9()) { jj_scanpos = xsp; break; }
     }
     return false;
   }
 
   static private boolean jj_3_3() {
-    if (jj_scan_token(27)) return true;
-    if (jj_3R_7()) return true;
-    if (jj_scan_token(28)) return true;
-    return false;
-  }
-
-  static private boolean jj_3R_38() {
     Token xsp;
+    xsp = jj_scanpos;
+    if (jj_scan_token(7)) jj_scanpos = xsp;
     xsp = jj_scanpos;
     if (jj_scan_token(30)) {
     jj_scanpos = xsp;
-    if (jj_scan_token(31)) return true;
+    if (jj_scan_token(13)) return true;
     }
-    if (jj_3R_37()) return true;
+    xsp = jj_scanpos;
+    if (jj_scan_token(7)) jj_scanpos = xsp;
+    if (jj_3R_13()) return true;
     return false;
   }
 
-  static private boolean jj_3R_7() {
-    if (jj_3R_12()) return true;
+  static private boolean jj_3R_11() {
+    if (jj_3R_20()) return true;
     Token xsp;
     while (true) {
       xsp = jj_scanpos;
-      if (jj_3R_13()) { jj_scanpos = xsp; break; }
+      if (jj_3_8()) { jj_scanpos = xsp; break; }
     }
     return false;
   }
 
-  static private boolean jj_3R_15() {
-    if (jj_3R_19()) return true;
-    return false;
-  }
-
-  static private boolean jj_3R_24() {
-    if (jj_3R_9()) return true;
+  static private boolean jj_3R_25() {
+    if (jj_3R_29()) return true;
     return false;
   }
 
   static private boolean jj_3R_28() {
-    if (jj_3R_33()) return true;
+    if (jj_scan_token(34)) return true;
+    if (jj_scan_token(ESPACE)) return true;
     return false;
   }
 
-  static private boolean jj_3R_39() {
+  static private boolean jj_3R_18() {
     Token xsp;
     xsp = jj_scanpos;
-    if (jj_scan_token(35)) jj_scanpos = xsp;
+    if (jj_3R_28()) jj_scanpos = xsp;
     xsp = jj_scanpos;
-    if (jj_3_3()) {
+    if (jj_3_5()) {
     jj_scanpos = xsp;
     if (jj_scan_token(11)) {
     jj_scanpos = xsp;
-    if (jj_3_4()) {
+    if (jj_3_6()) {
     jj_scanpos = xsp;
-    if (jj_3_5()) return true;
+    if (jj_3_7()) return true;
     }
     }
     }
@@ -1948,7 +2431,7 @@ public class Grammar2/*@bgen(jjtree)*/implements Grammar2TreeConstants, Grammar2
   static private boolean jj_lookingAhead = false;
   static private boolean jj_semLA;
   static private int jj_gen;
-  static final private int[] jj_la1 = new int[33];
+  static final private int[] jj_la1 = new int[68];
   static private int[] jj_la1_0;
   static private int[] jj_la1_1;
   static {
@@ -1956,12 +2439,12 @@ public class Grammar2/*@bgen(jjtree)*/implements Grammar2TreeConstants, Grammar2
       jj_la1_init_1();
    }
    private static void jj_la1_init_0() {
-      jj_la1_0 = new int[] {0x30,0x200200,0x200200,0x3c000,0x40000,0x8000670,0x80,0x6000000,0x200,0x20000000,0x8000e70,0x20000000,0x200,0x8000270,0xc0000000,0xc0000000,0x0,0x0,0x0,0x800,0x0,0x0,0x0,0x0,0x8000e70,0x0,0x200,0x80,0x0,0x0,0x0,0x0,0x6000000,};
+      jj_la1_0 = new int[] {0x2000,0x2030,0x201200,0x200200,0x201200,0x201200,0x3c000,0x40000,0x80,0x80,0x80,0x8002670,0x6001000,0x1200,0x1000,0x6000000,0x6001000,0x6001000,0x280,0x80,0x80,0x80,0x80,0x20000000,0x8002ef0,0x80,0x20000000,0x200,0x80,0x80,0x8002270,0x80,0x40002000,0x80,0x80,0x80000000,0x80,0x0,0x80,0x80,0x800,0x80,0x0,0x80,0x80,0x80,0x600,0x80,0x80,0x600,0x600,0x1200,0x0,0x200,0x1200,0x1200,0x0,0x0,0x80,0x80,0x80,0x80,0x0,0x0,0x1000,0x1000,0x1000,0x1000,};
    }
    private static void jj_la1_init_1() {
-      jj_la1_1 = new int[] {0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x8,0x0,0x0,0x0,0x0,0x0,0x7,0x7,0x8,0x0,0x10,0x20,0x7e000,0x6000,0x8,0xa40,0x0,0x0,0x80,0xa00,0x6000,0x78000,0x0,};
+      jj_la1_1 = new int[] {0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x920,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x4,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x3,0x0,0x4,0x0,0x0,0x0,0x0,0x7e000,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x920,0x920,0x0,0x920,0x920,0x40,0x900,0x0,0x0,0x0,0x0,0x6000,0x78000,0x0,0x0,0x0,0x0,};
    }
-  static final private JJCalls[] jj_2_rtns = new JJCalls[6];
+  static final private JJCalls[] jj_2_rtns = new JJCalls[12];
   static private boolean jj_rescan = false;
   static private int jj_gc = 0;
 
@@ -1983,7 +2466,7 @@ public class Grammar2/*@bgen(jjtree)*/implements Grammar2TreeConstants, Grammar2
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 33; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 68; i++) jj_la1[i] = -1;
     for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
@@ -1999,7 +2482,7 @@ public class Grammar2/*@bgen(jjtree)*/implements Grammar2TreeConstants, Grammar2
     jj_ntk = -1;
     jjtree.reset();
     jj_gen = 0;
-    for (int i = 0; i < 33; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 68; i++) jj_la1[i] = -1;
     for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
@@ -2017,7 +2500,7 @@ public class Grammar2/*@bgen(jjtree)*/implements Grammar2TreeConstants, Grammar2
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 33; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 68; i++) jj_la1[i] = -1;
     for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
@@ -2029,7 +2512,7 @@ public class Grammar2/*@bgen(jjtree)*/implements Grammar2TreeConstants, Grammar2
     jj_ntk = -1;
     jjtree.reset();
     jj_gen = 0;
-    for (int i = 0; i < 33; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 68; i++) jj_la1[i] = -1;
     for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
@@ -2046,7 +2529,7 @@ public class Grammar2/*@bgen(jjtree)*/implements Grammar2TreeConstants, Grammar2
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 33; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 68; i++) jj_la1[i] = -1;
     for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
@@ -2057,7 +2540,7 @@ public class Grammar2/*@bgen(jjtree)*/implements Grammar2TreeConstants, Grammar2
     jj_ntk = -1;
     jjtree.reset();
     jj_gen = 0;
-    for (int i = 0; i < 33; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 68; i++) jj_la1[i] = -1;
     for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
@@ -2177,7 +2660,7 @@ public class Grammar2/*@bgen(jjtree)*/implements Grammar2TreeConstants, Grammar2
       la1tokens[jj_kind] = true;
       jj_kind = -1;
     }
-    for (int i = 0; i < 33; i++) {
+    for (int i = 0; i < 68; i++) {
       if (jj_la1[i] == jj_gen) {
         for (int j = 0; j < 32; j++) {
           if ((jj_la1_0[i] & (1<<j)) != 0) {
@@ -2216,7 +2699,7 @@ public class Grammar2/*@bgen(jjtree)*/implements Grammar2TreeConstants, Grammar2
 
   static private void jj_rescan_token() {
     jj_rescan = true;
-    for (int i = 0; i < 6; i++) {
+    for (int i = 0; i < 12; i++) {
     try {
       JJCalls p = jj_2_rtns[i];
       do {
@@ -2229,6 +2712,12 @@ public class Grammar2/*@bgen(jjtree)*/implements Grammar2TreeConstants, Grammar2
             case 3: jj_3_4(); break;
             case 4: jj_3_5(); break;
             case 5: jj_3_6(); break;
+            case 6: jj_3_7(); break;
+            case 7: jj_3_8(); break;
+            case 8: jj_3_9(); break;
+            case 9: jj_3_10(); break;
+            case 10: jj_3_11(); break;
+            case 11: jj_3_12(); break;
           }
         }
         p = p.next;

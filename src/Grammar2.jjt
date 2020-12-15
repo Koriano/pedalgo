@@ -10,14 +10,13 @@ public class Grammar2 {
   /** Main entry point. */
   public static void main(String args[]) {
     System.out.println("Reading from standard input...");
-    Grammar2 t = new Grammar2(System.in);
-    /*Grammar2 t = null;
+    //Grammar2 t = new Grammar2(System.in);
+    Grammar2 t = null;
     try {
-      t = new Grammar2(new FileInputStream(new File("MOTMYSTERE.txt")));
+      t = new Grammar2(new FileInputStream(new File("NOMBREMYSTERE.txt")));
     } catch (FileNotFoundException e) {
       e.printStackTrace();
     }
-    */
     try {
       SimpleNode n = t.Start();
       n.dump("");
@@ -39,11 +38,11 @@ TOKEN : {
   | <#MINUSCULE : (["a"-"z"])>
   | <NOMBRE_NN: ((["0"-"9"])* (["1"-"9"]) (["0"-"9"])*)>
   | <ZERO : ("0")+>
-  | <REEL : (["0"-"9"])+(".")(["0"-"9"])+>
+  | <REEL : ("-")?(["0"-"9"])+(".")(["0"-"9"])+>
   | <ESPACE : (" ")+>
   | <ASSIGNATION : (<ESPACE>)? "<-" (<ESPACE>)?>
   | <NOM : <MINUSCULE> (<MAJUSCULE> | <MINUSCULE> | ["0"-"9"] | "_")*>
-  | <TEXTE : "\"" (<MAJUSCULE> | <MINUSCULE> | ["0"-"9"] | "_" | " " | "!")* "\"">
+  | <TEXTE : "\"" (<MAJUSCULE> | <MINUSCULE> | ["0"-"9"] | "_" | " " | "!" | ",")* "\"">
   | <BOOLEEN : "VRAI" | "FAUX">
   | <CR : (<ESPACE>)? ("#" (<MAJUSCULE> | <MINUSCULE> | ["0"-"9"] | "_" | " " | "!")*)? "\r\n">
 }
@@ -51,7 +50,7 @@ TOKEN : {
 // Main
 SimpleNode Start() : {}
 {
-  CORPS_METH() ";"
+  ALGORITHME()
   { return jjtThis; }
 }
 
@@ -59,7 +58,7 @@ SimpleNode Start() : {}
 // Valeurs primitives
 void ENTIER() : {}
 {
-  (<NOMBRE_NN> | <ZERO>)
+  ( (["-"] <NOMBRE_NN>) | <ZERO>)
 }
 
 
@@ -102,7 +101,7 @@ void DECL_CONST():
 
 void CONTENU_VAR() : {}
 {
-    LOOKAHEAD(999999999) CALCUL_BOOLEEN() | CALCUL() | <TEXTE> // LL(infinie)
+    [<ESPACE>] (LOOKAHEAD(999999999) CALCUL_BOOLEEN() | CALCUL() | <TEXTE>) // LL(infinie)
 }
 
 void INST_VAR():
@@ -116,7 +115,7 @@ void CORPS_METH():
 {}
 {
     <CR> [CORPS_METH()]
-    | (DECL_FONC() <CR> [CODE()] "retourne" <ESPACE> CONTENU_VAR() (<CR>)+ "FinFonction"
+    | (DECL_FONC() <CR> [CODE()] "Retourne" <ESPACE> CONTENU_VAR() (<CR>)+ "FinFonction"
       | DECL_PROC() <CR> CODE() "FinProcedure") <CR> [CORPS_METH()]
 }
 
@@ -159,7 +158,7 @@ void PARAMS():
 void PARAM_VAL():
 {}
 {
-  [<ESPACE>] CONTENU_VAR() [<ESPACE>] ["," PARAM_VAL()]
+  CONTENU_VAR() [<ESPACE>] ["," PARAM_VAL()]
 }
 
 void APPEL():
@@ -171,17 +170,17 @@ void APPEL():
 // Expressions arithmétiques
 void EXPRESSION_UNAIRE() : {}
 {
-    "(" [<ESPACE>] CALCUL() [<ESPACE>] ")" | APPEL() | ENTIER() | <REEL>
+  "(" [<ESPACE>] CALCUL() [<ESPACE>] ")" | APPEL() | ENTIER() | <REEL>
 }
 
 void CALCUL() : {}
 {
-    MULTIPLICATION() ( [<ESPACE>] ("+" | "-") [<ESPACE>] MULTIPLICATION() )*
+    MULTIPLICATION() (LOOKAHEAD(2) [<ESPACE>] ("+" | "-") [<ESPACE>] MULTIPLICATION() )*
 }
 
 void MULTIPLICATION() : {}
 {
-    EXPRESSION_UNAIRE() ( [<ESPACE>] ( "*" | "/" | "%") [<ESPACE>] EXPRESSION_UNAIRE() )*
+    EXPRESSION_UNAIRE() (LOOKAHEAD(2) [<ESPACE>] ( "*" | "/" | "%") [<ESPACE>] EXPRESSION_UNAIRE() )*
 }
 
 // Expressions booléennes
@@ -193,13 +192,13 @@ void EXPRESSION_UNAIRE_BOOL() : {}
 void CALCUL_BOOLEEN():
 {}
 {
-    EXPRESSION_ET() ( <ESPACE> "OU" <ESPACE> EXPRESSION_ET())*
+    EXPRESSION_ET() (LOOKAHEAD(2) <ESPACE> "OU" <ESPACE> EXPRESSION_ET())*
 }
 
 void EXPRESSION_ET():
 {}
 {
-    COMPARAISON() ( <ESPACE> "ET" <ESPACE> COMPARAISON())*
+    COMPARAISON() (LOOKAHEAD(2) <ESPACE> "ET" <ESPACE> COMPARAISON())*
 }
 
 // Comparaisons
@@ -218,8 +217,9 @@ void COMP_ARITH():
 void COMP_LOGIQUE():
 {}
 {
-  EXPRESSION_UNAIRE_BOOL() ([<ESPACE>] OPERATEUR_EGAL() [<ESPACE>] EXPRESSION_UNAIRE_BOOL())*
-  | <TEXTE> [<ESPACE>] OPERATEUR_EGAL() [<ESPACE>] <TEXTE>
+  LOOKAHEAD(2)
+  EXPRESSION_UNAIRE_BOOL() (LOOKAHEAD(2) [<ESPACE>] OPERATEUR_EGAL() [<ESPACE>] EXPRESSION_UNAIRE_BOOL())*
+  | (<TEXTE> | APPEL()) [<ESPACE>] OPERATEUR_EGAL() [<ESPACE>] (<TEXTE> | APPEL())
 }
 
 // Ligne de code générique

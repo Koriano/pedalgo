@@ -14,14 +14,13 @@ public class Grammar2/*@bgen(jjtree)*/implements Grammar2TreeConstants/*@egen*/ 
   /** Main entry point. */
   public static void main(String args[]) {
     System.out.println("Reading from standard input...");
-    Grammar2 t = new Grammar2(System.in);
-    /*Grammar2 t = null;
+    //Grammar2 t = new Grammar2(System.in);
+    Grammar2 t = null;
     try {
-      t = new Grammar2(new FileInputStream(new File("MOTMYSTERE.txt")));
+      t = new Grammar2(new FileInputStream(new File("NOMBREMYSTERE.txt")));
     } catch (FileNotFoundException e) {
       e.printStackTrace();
     }
-    */
     try {
       SimpleNode n = t.Start();
       n.dump("");
@@ -43,11 +42,11 @@ TOKEN : {
   | <#MINUSCULE : (["a"-"z"])>
   | <NOMBRE_NN: ((["0"-"9"])* (["1"-"9"]) (["0"-"9"])*)>
   | <ZERO : ("0")+>
-  | <REEL : (["0"-"9"])+(".")(["0"-"9"])+>
+  | <REEL : ("-")?(["0"-"9"])+(".")(["0"-"9"])+>
   | <ESPACE : (" ")+>
-  | <ASSIGNATION : <ESPACE> "<-" <ESPACE>>
+  | <ASSIGNATION : (<ESPACE>)? "<-" (<ESPACE>)?>
   | <NOM : <MINUSCULE> (<MAJUSCULE> | <MINUSCULE> | ["0"-"9"] | "_")*>
-  | <TEXTE : "\"" (<MAJUSCULE> | <MINUSCULE> | ["0"-"9"] | "_" | " " | "!")* "\"">
+  | <TEXTE : "\"" (<MAJUSCULE> | <MINUSCULE> | ["0"-"9"] | "_" | " " | "!" | ",")* "\"">
   | <BOOLEEN : "VRAI" | "FAUX">
   | <CR : (<ESPACE>)? ("#" (<MAJUSCULE> | <MINUSCULE> | ["0"-"9"] | "_" | " " | "!")*)? "\r\n">
 }
@@ -61,7 +60,7 @@ SimpleNode Start() : {/*@bgen(jjtree) Start */
 {/*@bgen(jjtree) Start */
   try {
 /*@egen*/
-  CORPS_METH() ";"/*@bgen(jjtree)*/
+  ALGORITHME()/*@bgen(jjtree)*/
   {
     jjtree.closeNodeScope(jjtn000, true);
     jjtc000 = false;
@@ -100,7 +99,7 @@ void ENTIER() : {/*@bgen(jjtree) ENTIER */
 {/*@bgen(jjtree) ENTIER */
   try {
 /*@egen*/
-  (<NOMBRE_NN> | <ZERO>)/*@bgen(jjtree)*/
+  ( (["-"] <NOMBRE_NN>) | <ZERO>)/*@bgen(jjtree)*/
   } finally {
     if (jjtc000) {
       jjtree.closeNodeScope(jjtn000, true);
@@ -118,28 +117,29 @@ void CORPS_VAR():
   jjtree.openNodeScope(jjtn000);
 /*@egen*/}
 {/*@bgen(jjtree) CORPS_VAR */
-    try {
+  try {
 /*@egen*/
-    (DECL_VAR() | DECL_CONST()) [CORPS_VAR()]/*@bgen(jjtree)*/
-    } catch (Throwable jjte000) {
-      if (jjtc000) {
-        jjtree.clearNodeScope(jjtn000);
-        jjtc000 = false;
-      } else {
-        jjtree.popNode();
-      }
-      if (jjte000 instanceof RuntimeException) {
-        throw (RuntimeException)jjte000;
-      }
-      if (jjte000 instanceof ParseException) {
-        throw (ParseException)jjte000;
-      }
-      throw (Error)jjte000;
-    } finally {
-      if (jjtc000) {
-        jjtree.closeNodeScope(jjtn000, true);
-      }
+  <CR> [CORPS_VAR()]
+  | (DECL_VAR() | DECL_CONST()) <CR> [CORPS_VAR()]/*@bgen(jjtree)*/
+  } catch (Throwable jjte000) {
+    if (jjtc000) {
+      jjtree.clearNodeScope(jjtn000);
+      jjtc000 = false;
+    } else {
+      jjtree.popNode();
     }
+    if (jjte000 instanceof RuntimeException) {
+      throw (RuntimeException)jjte000;
+    }
+    if (jjte000 instanceof ParseException) {
+      throw (ParseException)jjte000;
+    }
+    throw (Error)jjte000;
+  } finally {
+    if (jjtc000) {
+      jjtree.closeNodeScope(jjtn000, true);
+    }
+  }
 /*@egen*/
 }
 
@@ -219,7 +219,7 @@ void DECL_VAR():
 {/*@bgen(jjtree) DECL_VAR */
     try {
 /*@egen*/
-    NOM_VAR() <ESPACE> ":" <ESPACE> TYPE_VAR()/*@bgen(jjtree)*/
+    NOM_VAR() [<ESPACE>] ":" [<ESPACE>] TYPE_VAR()/*@bgen(jjtree)*/
     } catch (Throwable jjte000) {
       if (jjtc000) {
         jjtree.clearNodeScope(jjtn000);
@@ -251,7 +251,7 @@ void DECL_CONST():
 {/*@bgen(jjtree) DECL_CONST */
     try {
 /*@egen*/
-    "CONST " <ESPACE> DECL_VAR() <ASSIGNATION> CONTENU_VAR()/*@bgen(jjtree)*/
+    "CONST" <ESPACE> DECL_VAR() <ASSIGNATION> CONTENU_VAR()/*@bgen(jjtree)*/
     } catch (Throwable jjte000) {
       if (jjtc000) {
         jjtree.clearNodeScope(jjtn000);
@@ -282,7 +282,7 @@ void CONTENU_VAR() : {/*@bgen(jjtree) CONTENU_VAR */
 {/*@bgen(jjtree) CONTENU_VAR */
     try {
 /*@egen*/
-    LOOKAHEAD(999999999) CALCUL_BOOLEEN() | CALCUL() | <TEXTE>/*@bgen(jjtree)*/
+    [<ESPACE>] (LOOKAHEAD(999999999) CALCUL_BOOLEEN() | CALCUL() | <TEXTE>)/*@bgen(jjtree)*/
     } catch (Throwable jjte000) {
       if (jjtc000) {
         jjtree.clearNodeScope(jjtn000);
@@ -347,8 +347,9 @@ void CORPS_METH():
 {/*@bgen(jjtree) CORPS_METH */
     try {
 /*@egen*/
-    DECL_FONC() <CR> [CODE()] "retourne " <ESPACE> CONTENU_VAR() <CR> "FinFonction" <CR>
-    | DECL_PROC() <CR> CODE() <CR> "FinProcedure" <CR>/*@bgen(jjtree)*/
+    <CR> [CORPS_METH()]
+    | (DECL_FONC() <CR> [CODE()] "Retourne" <ESPACE> CONTENU_VAR() (<CR>)+ "FinFonction"
+      | DECL_PROC() <CR> CODE() "FinProcedure") <CR> [CORPS_METH()]/*@bgen(jjtree)*/
     } catch (Throwable jjte000) {
       if (jjtc000) {
         jjtree.clearNodeScope(jjtn000);
@@ -380,7 +381,7 @@ void DECL_FONC():
 {/*@bgen(jjtree) DECL_FONC */
     try {
 /*@egen*/
-    "Fonction " TYPE_VAR() <ESPACE> DECL_METH()/*@bgen(jjtree)*/
+    "Fonction" <ESPACE> TYPE_VAR() <ESPACE> DECL_METH()/*@bgen(jjtree)*/
     } catch (Throwable jjte000) {
       if (jjtc000) {
         jjtree.clearNodeScope(jjtn000);
@@ -412,7 +413,7 @@ void DECL_PROC():
 {/*@bgen(jjtree) DECL_PROC */
     try {
 /*@egen*/
-    "Procedure " DECL_METH()/*@bgen(jjtree)*/
+    "Procedure" <ESPACE> DECL_METH()/*@bgen(jjtree)*/
     } catch (Throwable jjte000) {
       if (jjtc000) {
         jjtree.clearNodeScope(jjtn000);
@@ -476,7 +477,7 @@ void DECL_PARAMS():
 {/*@bgen(jjtree) DECL_PARAMS */
   try {
 /*@egen*/
-  <NOM> ":" TYPE_VAR() ["," DECL_PARAMS()]/*@bgen(jjtree)*/
+  [<ESPACE>] <NOM> [<ESPACE>] ":" [<ESPACE>] TYPE_VAR() [<ESPACE>] ["," DECL_PARAMS()]/*@bgen(jjtree)*/
   } catch (Throwable jjte000) {
     if (jjtc000) {
       jjtree.clearNodeScope(jjtn000);
@@ -572,7 +573,7 @@ void PARAM_VAL():
 {/*@bgen(jjtree) PARAM_VAL */
   try {
 /*@egen*/
-  CONTENU_VAR() ["," PARAM_VAL()]/*@bgen(jjtree)*/
+  CONTENU_VAR() [<ESPACE>] ["," PARAM_VAL()]/*@bgen(jjtree)*/
   } catch (Throwable jjte000) {
     if (jjtc000) {
       jjtree.clearNodeScope(jjtn000);
@@ -634,28 +635,28 @@ void EXPRESSION_UNAIRE() : {/*@bgen(jjtree) EXPRESSION_UNAIRE */
   jjtree.openNodeScope(jjtn000);
 /*@egen*/}
 {/*@bgen(jjtree) EXPRESSION_UNAIRE */
-    try {
+  try {
 /*@egen*/
-    "(" CALCUL() ")" | APPEL() | ENTIER() | <REEL>/*@bgen(jjtree)*/
-    } catch (Throwable jjte000) {
-      if (jjtc000) {
-        jjtree.clearNodeScope(jjtn000);
-        jjtc000 = false;
-      } else {
-        jjtree.popNode();
-      }
-      if (jjte000 instanceof RuntimeException) {
-        throw (RuntimeException)jjte000;
-      }
-      if (jjte000 instanceof ParseException) {
-        throw (ParseException)jjte000;
-      }
-      throw (Error)jjte000;
-    } finally {
-      if (jjtc000) {
-        jjtree.closeNodeScope(jjtn000, true);
-      }
+  "(" [<ESPACE>] CALCUL() [<ESPACE>] ")" | APPEL() | ENTIER() | <REEL>/*@bgen(jjtree)*/
+  } catch (Throwable jjte000) {
+    if (jjtc000) {
+      jjtree.clearNodeScope(jjtn000);
+      jjtc000 = false;
+    } else {
+      jjtree.popNode();
     }
+    if (jjte000 instanceof RuntimeException) {
+      throw (RuntimeException)jjte000;
+    }
+    if (jjte000 instanceof ParseException) {
+      throw (ParseException)jjte000;
+    }
+    throw (Error)jjte000;
+  } finally {
+    if (jjtc000) {
+      jjtree.closeNodeScope(jjtn000, true);
+    }
+  }
 /*@egen*/
 }
 
@@ -667,7 +668,7 @@ void CALCUL() : {/*@bgen(jjtree) CALCUL */
 {/*@bgen(jjtree) CALCUL */
     try {
 /*@egen*/
-    MULTIPLICATION() ( ("+" | "-") MULTIPLICATION() )*/*@bgen(jjtree)*/
+    MULTIPLICATION() (LOOKAHEAD(2) [<ESPACE>] ("+" | "-") [<ESPACE>] MULTIPLICATION() )*/*@bgen(jjtree)*/
     } catch (Throwable jjte000) {
       if (jjtc000) {
         jjtree.clearNodeScope(jjtn000);
@@ -698,7 +699,7 @@ void MULTIPLICATION() : {/*@bgen(jjtree) MULTIPLICATION */
 {/*@bgen(jjtree) MULTIPLICATION */
     try {
 /*@egen*/
-    EXPRESSION_UNAIRE() ( ( "*" | "/" | "%") EXPRESSION_UNAIRE() )*/*@bgen(jjtree)*/
+    EXPRESSION_UNAIRE() (LOOKAHEAD(2) [<ESPACE>] ( "*" | "/" | "%") [<ESPACE>] EXPRESSION_UNAIRE() )*/*@bgen(jjtree)*/
     } catch (Throwable jjte000) {
       if (jjtc000) {
         jjtree.clearNodeScope(jjtn000);
@@ -730,7 +731,7 @@ void EXPRESSION_UNAIRE_BOOL() : {/*@bgen(jjtree) EXPRESSION_UNAIRE_BOOL */
 {/*@bgen(jjtree) EXPRESSION_UNAIRE_BOOL */
     try {
 /*@egen*/
-    ["NON "] ( LOOKAHEAD(3) "(" CALCUL_BOOLEEN() ")" | <BOOLEEN> | LOOKAHEAD(3) APPEL() | LOOKAHEAD(2) COMP_ARITH())/*@bgen(jjtree)*/
+    ["NON" <ESPACE>] ( LOOKAHEAD(3) "(" [<ESPACE>] CALCUL_BOOLEEN() [<ESPACE>] ")" | <BOOLEEN> | LOOKAHEAD(3) APPEL() | LOOKAHEAD(2) COMP_ARITH())/*@bgen(jjtree)*/
     } catch (Throwable jjte000) {
       if (jjtc000) {
         jjtree.clearNodeScope(jjtn000);
@@ -762,7 +763,7 @@ void CALCUL_BOOLEEN():
 {/*@bgen(jjtree) CALCUL_BOOLEEN */
     try {
 /*@egen*/
-    EXPRESSION_ET() (" OU " EXPRESSION_ET())*/*@bgen(jjtree)*/
+    EXPRESSION_ET() (LOOKAHEAD(2) <ESPACE> "OU" <ESPACE> EXPRESSION_ET())*/*@bgen(jjtree)*/
     } catch (Throwable jjte000) {
       if (jjtc000) {
         jjtree.clearNodeScope(jjtn000);
@@ -794,7 +795,7 @@ void EXPRESSION_ET():
 {/*@bgen(jjtree) EXPRESSION_ET */
     try {
 /*@egen*/
-    COMPARAISON() (" ET " COMPARAISON())*/*@bgen(jjtree)*/
+    COMPARAISON() (LOOKAHEAD(2) <ESPACE> "ET" <ESPACE> COMPARAISON())*/*@bgen(jjtree)*/
     } catch (Throwable jjte000) {
       if (jjtc000) {
         jjtree.clearNodeScope(jjtn000);
@@ -859,7 +860,7 @@ void COMP_ARITH():
 {/*@bgen(jjtree) COMP_ARITH */
   try {
 /*@egen*/
-  EXPRESSION_UNAIRE() (OPERATEUR_RELATIF() | OPERATEUR_EGAL())  EXPRESSION_UNAIRE()/*@bgen(jjtree)*/
+  EXPRESSION_UNAIRE() [<ESPACE>] (OPERATEUR_RELATIF() | OPERATEUR_EGAL()) [<ESPACE>] EXPRESSION_UNAIRE()/*@bgen(jjtree)*/
   } catch (Throwable jjte000) {
     if (jjtc000) {
       jjtree.clearNodeScope(jjtn000);
@@ -891,8 +892,9 @@ void COMP_LOGIQUE():
 {/*@bgen(jjtree) COMP_LOGIQUE */
   try {
 /*@egen*/
-  EXPRESSION_UNAIRE_BOOL() (OPERATEUR_EGAL() EXPRESSION_UNAIRE_BOOL())*
-  | <TEXTE> OPERATEUR_EGAL() <TEXTE>/*@bgen(jjtree)*/
+  LOOKAHEAD(2)
+  EXPRESSION_UNAIRE_BOOL() (LOOKAHEAD(2) [<ESPACE>] OPERATEUR_EGAL() [<ESPACE>] EXPRESSION_UNAIRE_BOOL())*
+  | (<TEXTE> | APPEL()) [<ESPACE>] OPERATEUR_EGAL() [<ESPACE>] (<TEXTE> | APPEL())/*@bgen(jjtree)*/
   } catch (Throwable jjte000) {
     if (jjtc000) {
       jjtree.clearNodeScope(jjtn000);
@@ -925,7 +927,8 @@ void CODE():
 {/*@bgen(jjtree) CODE */
   try {
 /*@egen*/
-  <ESPACE> (SI() | BOUCLE() | LOOKAHEAD(5) INST_VAR() | APPEL()) <ESPACE> /*CR*/ [CODE()]/*@bgen(jjtree)*/
+  <CR> [CODE()]
+  | (SI() | BOUCLE() | LOOKAHEAD(5) INST_VAR() | APPEL()) <CR> [CODE()]/*@bgen(jjtree)*/
   } catch (Throwable jjte000) {
     if (jjtc000) {
       jjtree.clearNodeScope(jjtn000);
@@ -958,7 +961,7 @@ void SI():
 {/*@bgen(jjtree) SI */
   try {
 /*@egen*/
-  "Si " CALCUL_BOOLEEN() CODE() ["Sinon " CODE()] "FinSi"/*@bgen(jjtree)*/
+  "Si" <ESPACE> CALCUL_BOOLEEN() <CR> CODE() ["Sinon" <CR> CODE()] "FinSi"/*@bgen(jjtree)*/
   } catch (Throwable jjte000) {
     if (jjtc000) {
       jjtree.clearNodeScope(jjtn000);
@@ -1023,7 +1026,7 @@ void POUR():
 {/*@bgen(jjtree) POUR */
   try {
 /*@egen*/
-  "Pour " INST_VAR() ";" CALCUL_BOOLEEN() ";" INST_VAR() CODE() "FinPour"/*@bgen(jjtree)*/
+  "Pour" <ESPACE> INST_VAR() [<ESPACE>] ";" [<ESPACE>] CALCUL_BOOLEEN() [<ESPACE>] ";" [<ESPACE>] INST_VAR() <CR> CODE() "FinPour"/*@bgen(jjtree)*/
   } catch (Throwable jjte000) {
     if (jjtc000) {
       jjtree.clearNodeScope(jjtn000);
@@ -1055,7 +1058,7 @@ void TANTQUE():
 {/*@bgen(jjtree) TANTQUE */
   try {
 /*@egen*/
-  "TantQue " CALCUL_BOOLEEN() CODE() "FinTantQue"/*@bgen(jjtree)*/
+  "TantQue" <ESPACE> CALCUL_BOOLEEN() <CR> CODE() "FinTantQue"/*@bgen(jjtree)*/
   } catch (Throwable jjte000) {
     if (jjtc000) {
       jjtree.clearNodeScope(jjtn000);
@@ -1123,28 +1126,28 @@ void BLOC_VAR():
   jjtree.openNodeScope(jjtn000);
 /*@egen*/}
 {/*@bgen(jjtree) BLOC_VAR */
-    try {
+  try {
 /*@egen*/
-    "Var" CORPS_VAR() "FinVar"/*@bgen(jjtree)*/
-    } catch (Throwable jjte000) {
-      if (jjtc000) {
-        jjtree.clearNodeScope(jjtn000);
-        jjtc000 = false;
-      } else {
-        jjtree.popNode();
-      }
-      if (jjte000 instanceof RuntimeException) {
-        throw (RuntimeException)jjte000;
-      }
-      if (jjte000 instanceof ParseException) {
-        throw (ParseException)jjte000;
-      }
-      throw (Error)jjte000;
-    } finally {
-      if (jjtc000) {
-        jjtree.closeNodeScope(jjtn000, true);
-      }
+  "Var" <CR> CORPS_VAR() "FinVar"/*@bgen(jjtree)*/
+  } catch (Throwable jjte000) {
+    if (jjtc000) {
+      jjtree.clearNodeScope(jjtn000);
+      jjtc000 = false;
+    } else {
+      jjtree.popNode();
     }
+    if (jjte000 instanceof RuntimeException) {
+      throw (RuntimeException)jjte000;
+    }
+    if (jjte000 instanceof ParseException) {
+      throw (ParseException)jjte000;
+    }
+    throw (Error)jjte000;
+  } finally {
+    if (jjtc000) {
+      jjtree.closeNodeScope(jjtn000, true);
+    }
+  }
 /*@egen*/
 }
 
@@ -1157,7 +1160,7 @@ void BLOC_METH():
 {/*@bgen(jjtree) BLOC_METH */
   try {
 /*@egen*/
-  "Meth" (CORPS_METH())+ "FinMeth"/*@bgen(jjtree)*/
+  "Meth" <CR> CORPS_METH() "FinMeth"/*@bgen(jjtree)*/
   } catch (Throwable jjte000) {
     if (jjtc000) {
       jjtree.clearNodeScope(jjtn000);
@@ -1189,7 +1192,7 @@ void MAIN():
 {/*@bgen(jjtree) MAIN */
     try {
 /*@egen*/
-    "Debut" CODE() "Fin"/*@bgen(jjtree)*/
+    "Debut" <CR> CODE() "Fin"/*@bgen(jjtree)*/
     } catch (Throwable jjte000) {
       if (jjtc000) {
         jjtree.clearNodeScope(jjtn000);
@@ -1221,7 +1224,7 @@ void ALGORITHME():
 {/*@bgen(jjtree) ALGORITHME */
   try {
 /*@egen*/
-  "Algo " <NOM> BLOC_VAR() BLOC_METH() MAIN()/*@bgen(jjtree)*/
+  "Algo" <ESPACE> <NOM> (<CR>)+ BLOC_VAR() (<CR>)+ BLOC_METH() (<CR>)+ MAIN() (<CR>)*/*@bgen(jjtree)*/
   } catch (Throwable jjte000) {
     if (jjtc000) {
       jjtree.clearNodeScope(jjtn000);
